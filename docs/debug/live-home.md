@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - banner [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]
+      - generic [ref=e19]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e25] [cursor=pointer]
+      - generic [ref=e62]
+      - generic [ref=e135]
+  - contentinfo [ref=e241]:
+    - generic [ref=e243]:
+      - generic [ref=e244]
+      - generic [ref=e263]
+      - generic [ref=e283]

@@ -1,0 +1,103 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - banner [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - link "About" [ref=e9] [cursor=pointer]:
+            - /url: /about-us
+          - link "B2B Sales" [ref=e11] [cursor=pointer]:
+            - /url: /b2b-sales
+          - paragraph [ref=e13]: Chat
+          - link "Store & Service Locations" [ref=e14] [cursor=pointer]:
+            - /url: /store-locator
+        - generic [ref=e18]: "|"
+      - generic [ref=e19]:
+        - link "Singer Logo":
+          - /url: /
+        - textbox "Search Here" [ref=e21]
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e25] [cursor=pointer]:
+        - button "Go to Explore Deals" [ref=e27]:
+          - img "TV Home page Hero Banner 05" [ref=e29]
+        - button "Go to Explore Deals" [ref=e31]:
+          - img "Eid 2" [ref=e33]
+        - button "Go to Explore Deals" [ref=e35]:
+          - img "Home page hero banner AC" [ref=e37]
+        - button "Go to Learn More" [ref=e39]:
+          - img "Home page Hero Banner WM" [ref=e41]
+        - button "Go to Explore Deals" [ref=e43]:
+          - img "Oven Home page hero banner 02" [ref=e45]
+        - button "Go to Explore Deals" [ref=e47]:
+          - img "Ref Home page hero banner 03" [ref=e49]
+        - button "Go to Learn more" [ref=e51]:
+          - img "Novoair Homepage" [ref=e53]
+      - generic [ref=e62]:
+        - heading "What are you looking for?" [level=4] [ref=e63]
+        - generic [ref=e66]:
+          - link "Go to category page" [ref=e69] [cursor=pointer]:
+            - /url: /category/refrigerator?category=refrigerator&page=1&limit=12
+          - link "Go to category page" [ref=e74] [cursor=pointer]:
+            - /url: /category/freezer?category=freezer&page=1&limit=12
+          - link "Go to category page" [ref=e79] [cursor=pointer]:
+            - /url: /category/air-conditioner?category=air-conditioner&page=1&limit=12
+          - link "Go to category page" [ref=e84] [cursor=pointer]:
+            - /url: /category/television?category=television&page=1&limit=12
+          - link "Go to category page" [ref=e89] [cursor=pointer]:
+            - /url: /category/washing-machine?category=washing-machine&page=1&limit=12
+          - link "Go to category page" [ref=e94] [cursor=pointer]:
+            - /url: /category/kitchen-appliances?category=kitchen-appliances&page=1&limit=12
+          - link "Go to category page" [ref=e99] [cursor=pointer]:
+            - /url: /category/oven?category=oven&page=1&limit=12
+          - link "Go to category page" [ref=e104] [cursor=pointer]:
+            - /url: /category/small-appliances?category=small-appliances&page=1&limit=12
+          - link "Go to category page" [ref=e109] [cursor=pointer]:
+            - /url: /category/sewing-machine?category=sewing-machine&page=1&limit=12
+          - link "Go to category page" [ref=e114] [cursor=pointer]:
+            - /url: /category/computers-accessories?category=computers-accessories&page=1&limit=12
+          - link "Go to category page" [ref=e119] [cursor=pointer]:
+            - /url: /category/smart-gadgets?category=smart-gadgets&page=1&limit=12
+          - link "Go to category page" [ref=e124] [cursor=pointer]:
+            - /url: /category/power-solution?category=power-solution&page=1&limit=12
+          - link "Go to category page" [ref=e129] [cursor=pointer]:
+            - /url: /category/lighting-electrical-accessories?category=lighting-electrical-accessories&page=1&limit=12
+      - generic [ref=e135]:
+        - link "Go to product details" [ref=e136] [cursor=pointer]:
+          - /url: /product/beko-front-loading-washing-machine-8-0-kg-wcv8636xb0m?category=front-load
+          - generic [ref=e137]
+        - generic [ref=e155]:
+          - link "Go to product details" [ref=e156] [cursor=pointer]:
+            - /url: /product/primax-4k-google-tv-43-inch-43gu5000tv?category=uhd4k-smart-tv
+          - link "Go to product details" [ref=e178] [cursor=pointer]:
+            - /url: /product/beko-microwave-oven-30-ltr-mgf30330s?category=grill
+          - link "Go to product details" [ref=e197] [cursor=pointer]:
+            - /url: /product/singer-top-loading-washing-machine-9-0-kg-srwm-s300atl90ismjg1?category=top-load
+          - link "Go to product details" [ref=e216] [cursor=pointer]:
+            - /url: /product/singer-grinder-mrn-1100w?category=blender-grinder
+  - contentinfo [ref=e241]:
+    - generic [ref=e243]:
+      - generic [ref=e244]:
+        - paragraph [ref=e245]: About Singer
+        - list [ref=e246]:
+          - listitem [ref=e247]
+          - listitem [ref=e249]
+          - listitem [ref=e251]
+          - listitem [ref=e253]
+          - listitem [ref=e255]
+          - listitem [ref=e257]
+          - listitem [ref=e259]
+          - listitem [ref=e261]
+      - generic [ref=e263]:
+        - generic [ref=e264]:
+          - paragraph [ref=e265]: Help Services
+          - list [ref=e266]
+        - generic [ref=e271]:
+          - generic [ref=e272]
+          - generic [ref=e280]
+      - generic [ref=e283]:
+        - paragraph [ref=e284]: Payment Methods
+        - generic [ref=e285]:
+          - paragraph [ref=e287]: Cash On Delivery
+          - paragraph [ref=e289]: Easy monthly installments
+          - img "nagad payment method" [ref=e296]
