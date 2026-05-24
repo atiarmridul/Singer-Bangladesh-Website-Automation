@@ -25,7 +25,7 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - status: in-progress
 - owner: codex
 - currentTask: Continue from existing handoff and keep progress tracker updated
-- lastUpdated: 2026-05-24T18:03:49.254Z
+- lastUpdated: 2026-05-24T18:33:41.245Z
 
 
 ## Next Steps
@@ -47,6 +47,9 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - Added GitHub Actions sanity and scheduled regression workflows
 - Updated Markdown docs for CI, visual, data factory, global setup, and parallel execution changes
 - Added targeted inline comments for setup, data factory, visual, API model, and network wait helpers
+- Added generated human-readable test case catalog and docs update command
+- Split oversized root README into concise landing page plus focused docs
+- Updated category sanity tests to use live API-backed category fixture
 
 
 ## Files Touched
@@ -75,6 +78,14 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - docs/architecture.md
 - docs/environments.md
 - docs/walkthrough.md
+- docs/test-cases.md
+- scripts/update-test-cases.mjs
+- docs/commands.md
+- docs/project-structure.md
+- docs/reports.md
+- docs/ci.md
+- docs/mcp.md
+- tests-ts/sanity/cases/category.ts
 
 
 ## History

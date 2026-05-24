@@ -34,9 +34,11 @@ npm run test:sanity
 npm run test:regression
 npm run test:visual
 npm run test:visual:update
+npm run docs:test-cases
 ```
 
 Use `test:visual:update` only when an intentional UI change should become the new screenshot baseline.
+Run `docs:test-cases` after adding, removing, renaming, or materially changing test cases.
 
 ## Current Architecture
 
@@ -67,8 +69,15 @@ Keep these docs aligned when changing framework behavior:
 - `README.md`
 - `docs/agent.md`
 - `docs/architecture.md`
+- `docs/commands.md`
+- `docs/ci.md`
 - `docs/environments.md`
+- `docs/mcp.md`
+- `docs/project-structure.md`
+- `docs/reports.md`
 - `docs/walkthrough.md`
 - `docs/AGENT_PROGRESS.md`
+- `docs/test-cases.md`
 
+Keep `README.md` concise and wire detailed guidance into focused files under `docs/`.
 Avoid running `npm run docs:update` unless you intend to regenerate `README.md` and `docs/agent.md`; the generator is intentionally broad and may overwrite hand-written README sections.

@@ -5,6 +5,7 @@ import { NoDataError } from "../../src/exceptions";
 import { Category, Product } from "../../src/api/models";
 
 export type ProductSelection = "first" | "random";
+export type CategorySelection = "first" | "random";
 
 export class TestDataFactory {
   private readonly settings: Settings;
@@ -19,7 +20,38 @@ export class TestDataFactory {
     return await this.catalogApiAgent.getTopLevelCategories();
   }
 
-  async getProducts(categorySlug = this.settings.defaultCategory, limit = this.settings.productsLimit): Promise<Product[]> {
+  async getTopLevelCategory(selection: CategorySelection = "random"): Promise<Category> {
+    const categories = await this.getTopLevelCategories();
+
+    if (categories.length === 0) {
+      throw new NoDataError("No top-level categories found");
+    }
+
+    if (selection === "random") {
+      return categories[Math.floor(Math.random() * categories.length)];
+    }
+
+    return categories[0];
+  }
+
+  async getTopLevelCategoryWithProducts(selection: CategorySelection = "random"): Promise<Category> {
+    const categories = await this.getTopLevelCategories();
+    const candidateCategories = selection === "random" ? [...categories].sort(() => Math.random() - 0.5) : categories;
+
+    for (const category of candidateCategories) {
+      const products = await this.getProducts(category.slug, 1);
+      if (products.length > 0) {
+        return category;
+      }
+    }
+
+    throw new NoDataError("No top-level categories with products found");
+  }
+
+  async getProducts(
+    categorySlug = this.settings.defaultCategory,
+    limit = this.settings.productsLimit
+  ): Promise<Product[]> {
     return await this.catalogApiAgent.getProducts(categorySlug, 1, limit);
   }
 

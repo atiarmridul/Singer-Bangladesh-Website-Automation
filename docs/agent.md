@@ -49,6 +49,11 @@ This guide defines the Singer Bangladesh Playwright TypeScript automation struct
 - Baselines live next to the visual spec under `*-snapshots/`.
 - Run `npm run test:visual` to compare and `npm run test:visual:update` only for intentional UI changes.
 
+## Test Case Catalog
+
+- `docs/test-cases.md` is generated from Playwright tests and contains the written test case list plus execution flow.
+- Run `npm run docs:test-cases` after adding, removing, renaming, or materially changing test cases.
+
 ## Current Agents
 
 - `src/api/agents/catalogAgent.ts`
@@ -64,6 +69,15 @@ This guide defines the Singer Bangladesh Playwright TypeScript automation struct
 Page objects keep locators and page actions reusable.
 Specs keep assertions explicit and organized with `test.describe` blocks.
 API agents provide optional typed access to Singer BD backend endpoints.
+
+## Documentation Map
+
+- `README.md` is the concise GitHub landing page.
+- `docs/commands.md` contains commands, tags, and debugging notes.
+- `docs/project-structure.md` contains repository layout, layer responsibilities, and maintenance notes.
+- `docs/reports.md` contains report and artifact guidance.
+- `docs/ci.md` contains workflow and CI execution guidance.
+- `docs/mcp.md` contains local MCP server usage.
 
 ## Architecture Rules
 

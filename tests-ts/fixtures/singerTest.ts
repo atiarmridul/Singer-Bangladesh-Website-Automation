@@ -1,10 +1,11 @@
 import { expect, Page, Route, test as base } from "@playwright/test";
 
-import { Product } from "../../src/api/models";
+import { Category, Product } from "../../src/api/models";
 import { TestDataFactory, createTestDataFactory } from "./dataFactory";
 
 type SingerFixtures = {
   dataFactory: TestDataFactory;
+  liveCategory: Category;
   liveProduct: Product;
 };
 
@@ -36,6 +37,9 @@ async function tearDownPassedTest(page: Page): Promise<void> {
 export const test = base.extend<SingerFixtures>({
   dataFactory: async ({}, use) => {
     await use(createTestDataFactory());
+  },
+  liveCategory: async ({ dataFactory }, use) => {
+    await use(await dataFactory.getTopLevelCategoryWithProducts());
   },
   liveProduct: async ({ dataFactory }, use) => {
     await use(await dataFactory.getAnyInStockProduct());

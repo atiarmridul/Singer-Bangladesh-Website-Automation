@@ -27,6 +27,8 @@ async function prepareVisualPage(page: import("@playwright/test").Page): Promise
 }
 
 test.describe("Homepage visual regression", () => {
+  // Purpose: protects the primary storefront header against unintended layout or rendering drift.
+  // Risk covered: missing logo/navigation/search UI, broken header layout, or accidental visual regressions.
   test("@visual Homepage header - should match baseline", async ({ page }) => {
     await prepareVisualPage(page);
 
@@ -38,6 +40,8 @@ test.describe("Homepage visual regression", () => {
     });
   });
 
+  // Purpose: protects the first homepage hero viewport against unexpected rendering changes.
+  // Risk covered: missing promotional hero content, shifted hero layout, or broken above-the-fold rendering.
   test("@visual Homepage hero - should match baseline", async ({ page }) => {
     await prepareVisualPage(page);
 
