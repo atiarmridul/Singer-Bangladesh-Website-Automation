@@ -1,35 +1,39 @@
 import { expect, test } from "../../fixtures/singerTest";
 
 import { CartPage } from "../../../src/pages/cartPage";
-import { CategoryPage } from "../../../src/pages/categoryPage";
 import { ProductPage } from "../../../src/pages/productPage";
 
 export function defineCartSanity(): void {
-  // Purpose: covers the main guest shopping path from listing page to PDP to cart.
-  // Risk covered: disabled add-to-cart action, cart counter failure, or cart item not persisting.
-  test("@sanity @cart SANITY_006 Cart - should add product to cart from product details page", async ({ page }) => {
-    const categoryPage = new CategoryPage(page);
-    const productPage = new ProductPage(page);
-    const cartPage = new CartPage(page);
+  test.describe("Cart state sanity", () => {
+    test.describe.configure({ mode: "serial" });
 
-    await categoryPage.openWashingMachineCategory();
-    await productPage.openFirstProductFromListing();
-    await productPage.addToCart();
+    // Purpose: covers the main guest shopping path using a live in-stock product from API-backed test data.
+    // Risk covered: stale hardcoded products, disabled add-to-cart action, cart counter failure, or cart item not persisting.
+    test("@sanity @cart SANITY_006 Cart - should add live in-stock product to cart", async ({
+      page,
+      liveProduct
+    }) => {
+      const productPage = new ProductPage(page);
+      const cartPage = new CartPage(page);
 
-    await cartPage.expectVisible(cartPage.cartCount);
-    await cartPage.open();
-    await cartPage.expectUrlContains("/cart");
-    await expect(await cartPage.getCartState()).toBe("items");
-  });
+      await productPage.load(liveProduct.slug);
+      await productPage.addToCart();
 
-  // Purpose: verifies cart page routing independently from the add-to-cart workflow.
-  // Risk covered: broken cart route, blank cart page, or unrecognized empty-cart UI.
-  test("@sanity @cart SANITY_007 Cart - should open cart page directly", async ({ page }) => {
-    const cartPage = new CartPage(page);
+      await cartPage.expectVisible(cartPage.cartCount);
+      await cartPage.open();
+      await cartPage.expectUrlContains("/cart");
+      await expect(await cartPage.getCartState()).toBe("items");
+    });
 
-    await cartPage.open();
+    // Purpose: verifies cart page routing independently from the add-to-cart workflow.
+    // Risk covered: broken cart route, blank cart page, or unrecognized empty-cart UI.
+    test("@sanity @cart SANITY_007 Cart - should open cart page directly", async ({ page }) => {
+      const cartPage = new CartPage(page);
 
-    await cartPage.expectUrlContains("/cart");
-    await expect(await cartPage.expectKnownCartState()).not.toBe("unknown");
+      await cartPage.open();
+
+      await cartPage.expectUrlContains("/cart");
+      await expect(await cartPage.expectKnownCartState()).not.toBe("unknown");
+    });
   });
 }

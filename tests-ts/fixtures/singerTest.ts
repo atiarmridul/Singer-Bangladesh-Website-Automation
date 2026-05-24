@@ -1,5 +1,13 @@
 import { expect, Page, Route, test as base } from "@playwright/test";
 
+import { Product } from "../../src/api/models";
+import { TestDataFactory, createTestDataFactory } from "./dataFactory";
+
+type SingerFixtures = {
+  dataFactory: TestDataFactory;
+  liveProduct: Product;
+};
+
 async function tearDownPassedTest(page: Page): Promise<void> {
   // Failed tests keep their context artifacts intact for traces, screenshots, and debugging.
   if (page.isClosed()) {
@@ -25,7 +33,13 @@ async function tearDownPassedTest(page: Page): Promise<void> {
     .catch(() => undefined);
 }
 
-export const test = base.extend({
+export const test = base.extend<SingerFixtures>({
+  dataFactory: async ({}, use) => {
+    await use(createTestDataFactory());
+  },
+  liveProduct: async ({ dataFactory }, use) => {
+    await use(await dataFactory.getAnyInStockProduct());
+  },
   page: async ({ page }, use, testInfo) => {
     // Static assets are served from a CDN domain; route them through the main origin.
     // This avoids CDN-specific failures masking real storefront regressions.

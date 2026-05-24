@@ -733,7 +733,7 @@ Business flows are reusable across:
 
 - sanity tests
 - regression suites
-- future API tests
+- API-assisted regression tests
 
 ---
 
@@ -741,12 +741,10 @@ Business flows are reusable across:
 
 The structure supports future additions:
 
-- visual testing
 - mobile emulation
-- API testing
-- parallel execution
-- CI/CD pipelines
-- data-driven testing
+- accessibility testing
+- cross-browser visual baselines
+- deeper API schema validation
 
 ---
 
@@ -763,6 +761,9 @@ The framework currently validates:
 - authentication panel
 - campaign pages
 - footer links
+- support and store locator flows
+- API-assisted regression checks
+- homepage visual regression baselines
 
 ---
 
@@ -770,16 +771,11 @@ The framework currently validates:
 
 Potential next upgrades:
 
-- Allure reporting
-- test tagging
 - retry-aware utilities
 - network mocking
 - API schema validation
-- data factories
-- Playwright projects for multi-browser testing
-- GitHub Actions CI pipeline
+- additional domain-specific data factories
 - accessibility testing
-- visual regression testing
 - MCP-assisted autonomous debugging
 
 ---

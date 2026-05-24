@@ -43,9 +43,21 @@ This guide defines the Singer Bangladesh Playwright TypeScript automation struct
 - `tests-ts/sanity/cases/search.ts`
 - `tests-ts/sanity/cases/support.ts`
 
+## Visual Specs
+
+- `tests-ts/visual/homepage.visual.spec.ts`
+- Baselines live next to the visual spec under `*-snapshots/`.
+- Run `npm run test:visual` to compare and `npm run test:visual:update` only for intentional UI changes.
+
 ## Current Agents
 
 - `src/api/agents/catalogAgent.ts`
+
+## Test Data
+
+- `tests-ts/fixtures/dataFactory.ts` uses `CatalogApiAgent` to fetch live catalog data.
+- `tests-ts/fixtures/singerTest.ts` exposes `dataFactory` and `liveProduct` fixtures.
+- Prefer `liveProduct` for product and cart flows so tests avoid stale or out-of-stock static data.
 
 ## Purpose
 
@@ -82,6 +94,9 @@ const agent = new CatalogApiAgent(new ApiClient(settings.apiBaseUrl, settings.ti
 ## Environment and CI
 
 - Select environment profile with `TEST_ENV=dev|staging|prod`.
+- `tests-ts/fixtures/globalSetup.ts` validates the selected environment and checks `BASE_URL` reachability before tests run.
+- `playwright.config.ts` enables fully parallel execution and caps CI at 2 workers; cart sanity cases remain serial.
+- `.github/workflows/sanity.yml` runs sanity checks on push, pull request, and manual dispatch.
+- `.github/workflows/regression.yml` runs regression checks on a daily cron schedule and manual dispatch.
 - Screenshots, videos, and traces are retained on failure by `playwright.config.ts`.
-- Sanity CI runs from `.github/workflows/sanity.yml`.
-- Docs are auto-synced by `.github/workflows/docs-sync.yml`.
+- CI artifacts include `test-results/`, `playwright-report/`, and `allure-results/` where applicable.

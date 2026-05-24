@@ -17,6 +17,10 @@ export interface Product {
   brand: string;
   sellPrice: number;
   regularPrice: number;
+  quantity: number;
+  maxCartQuantity: number;
+  status: number;
+  inStock: boolean;
 }
 
 function asObject(value: unknown): JsonObject {
@@ -79,6 +83,9 @@ export function productFromJson(payload: JsonObject): Product {
   }
   const slug = parseRequiredSlug(payload, "product");
   const brand = asObject(asObject(payload.brand).name);
+  const quantity = toFloat(payload.quantity);
+  const maxCartQuantity = toFloat(payload.max_cart_quantity);
+  const status = toFloat(payload.status);
 
   return {
     id: toNumber(payload.id, "id"),
@@ -86,6 +93,11 @@ export function productFromJson(payload: JsonObject): Product {
     name: localizedName(payload.name, slug),
     brand: typeof brand.en === "string" ? brand.en : "",
     sellPrice: toFloat(payload.sell_price),
-    regularPrice: toFloat(payload.regular_price)
+    regularPrice: toFloat(payload.regular_price),
+    quantity,
+    maxCartQuantity,
+    status,
+    // The listing API exposes availability through stock count, cart limit, and active status together.
+    inStock: quantity > 0 && maxCartQuantity > 0 && status === 1
   };
 }

@@ -14,11 +14,14 @@ const browserRunOptions = {
 // Central Playwright configuration. Environment-specific values are resolved in src/config.ts.
 export default defineConfig({
   testDir: "./tests-ts",
+  globalSetup: "./tests-ts/fixtures/globalSetup.ts",
   timeout: settings.timeoutMs + 15_000,
   expect: {
     timeout: 15_000
   },
-  fullyParallel: false,
+  fullyParallel: true,
+  workers: process.env.CI ? 2 : undefined,
+  snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-report", open: "never" }],

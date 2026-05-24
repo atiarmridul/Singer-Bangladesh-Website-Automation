@@ -23,6 +23,10 @@ TEST_ENV=prod npm run test:prod
 
 If `TEST_ENV` is not set, the framework uses built-in defaults from `src/config.ts`.
 
+Before any Playwright test starts, `tests-ts/fixtures/globalSetup.ts` loads the selected profile with `getSettings()`
+and performs a lightweight reachability check against `BASE_URL`. This fails fast when CI or local runs point at an
+invalid or unavailable environment.
+
 ## Load Order
 
 Settings are loaded in this order:
@@ -119,3 +123,9 @@ env:
 ```
 
 Do not commit secrets into `.env`, `.env.example`, or `environments/*.env`.
+
+## GitHub Actions
+
+- `.github/workflows/sanity.yml` runs Chromium sanity tests on push to `main`, pull requests, and manual dispatch.
+- `.github/workflows/regression.yml` runs Chromium regression tests on a daily cron schedule and manual dispatch.
+- Both workflows set `CI=true`, so `playwright.config.ts` caps execution at 2 workers.

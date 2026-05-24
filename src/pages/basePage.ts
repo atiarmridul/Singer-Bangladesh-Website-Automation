@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { expect, Locator, Page, Response } from "@playwright/test";
 
 import { PageLoadError } from "../exceptions";
 
@@ -57,6 +57,14 @@ export abstract class BasePage {
     await this.page.waitForLoadState("domcontentloaded");
     // Network idle can be noisy on ecommerce pages, so timeout is non-fatal.
     await this.page.waitForLoadState("networkidle", { timeout: 10_000 }).catch(() => undefined);
+  }
+
+  async waitForNetworkResponse(urlPattern: string, timeout = 15_000): Promise<Response> {
+    // Use this before actions that trigger API hydration so tests can wait on a domain signal instead of sleeping.
+    return await this.page.waitForResponse(
+      (response) => response.url().includes(urlPattern) && response.ok(),
+      { timeout }
+    );
   }
 
   async dismissBlockingModals(): Promise<void> {

@@ -1,17 +1,142 @@
 {
-  "status": "pending",
-  "currentTask": "Establish agent handoff tracking system",
-  "nextSteps": ["Review this new tracking guide", "Use `agent_progress.json` for future handoff updates"],
-  "completedTasks": ["Created docs/AGENT_PROGRESS.md", "Created initial agent_progress.json"],
+  "status": "in-progress",
+  "currentTask": "Continue from existing handoff and keep progress tracker updated",
+  "nextSteps": [
+    "Review this new tracking guide",
+    "Use `agent_progress.json` for future handoff updates"
+  ],
+  "completedTasks": [
+    "Created docs/AGENT_PROGRESS.md",
+    "Created initial agent_progress.json",
+    "Added automatic handoff tracking instructions to agent.md",
+    "Added BasePage waitForNetworkResponse helper",
+    "Added Playwright global setup environment reachability check",
+    "Enabled config-managed Playwright parallel execution with CI worker cap",
+    "Added API-backed data factory and live product fixture",
+    "Added homepage visual regression suite and baselines",
+    "Added GitHub Actions sanity and scheduled regression workflows",
+    "Updated Markdown docs for CI, visual, data factory, global setup, and parallel execution changes",
+    "Added targeted inline comments for setup, data factory, visual, API model, and network wait helpers"
+  ],
   "blockers": [],
-  "filesTouched": ["docs/AGENT_PROGRESS.md", "agent_progress.json"],
-  "lastUpdated": "2026-05-24T16:09:46.480Z",
-  "owner": "agent-1",
+  "filesTouched": [
+    "docs/AGENT_PROGRESS.md",
+    "agent_progress.json",
+    "agent.md",
+    "src/pages/basePage.ts",
+    "playwright.config.ts",
+    "tests-ts/fixtures/globalSetup.ts",
+    "README.md",
+    "docs/agent.md",
+    "package.json",
+    "tests-ts/sanity/cases/cart.ts",
+    "tests-ts/sanity/sanity.spec.ts",
+    "tests-ts/fixtures/dataFactory.ts",
+    "tests-ts/fixtures/singerTest.ts",
+    "src/api/models.ts",
+    "tests-ts/sanity/cases/productDetails.ts",
+    "tests-ts/visual/homepage.visual.spec.ts",
+    "tests-ts/visual/homepage.visual.spec.ts-snapshots/homepage-header.png",
+    "tests-ts/visual/homepage.visual.spec.ts-snapshots/homepage-hero.png",
+    ".github/workflows/sanity.yml",
+    ".github/workflows/regression.yml",
+    "tests-ts/regression/api.spec.ts",
+    "docs/architecture.md",
+    "docs/environments.md",
+    "docs/walkthrough.md"
+  ],
+  "lastUpdated": "2026-05-24T18:03:49.254Z",
+  "owner": "codex",
   "history": [
     {
       "timestamp": "2026-05-24T00:00:00Z",
       "summary": "Created initial agent handoff tracking artifact",
-      "files": ["docs/AGENT_PROGRESS.md", "agent_progress.json"]
+      "files": [
+        "docs/AGENT_PROGRESS.md",
+        "agent_progress.json"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:29:56.938Z",
+      "summary": "Started agent session",
+      "files": []
+    },
+    {
+      "timestamp": "2026-05-24T17:31:38.887Z",
+      "summary": "Documented automatic agent progress workflow",
+      "files": [
+        "agent.md"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:32:30.779Z",
+      "summary": "Added network response wait helper to BasePage",
+      "files": [
+        "src/pages/basePage.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:40:01.066Z",
+      "summary": "Added global setup environment smoke check",
+      "files": [
+        "playwright.config.ts",
+        "tests-ts/fixtures/globalSetup.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:46:10.110Z",
+      "summary": "Enabled Playwright parallel execution and marked cart tests serial",
+      "files": [
+        "playwright.config.ts",
+        "package.json",
+        "tests-ts/sanity/cases/cart.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:50:50.337Z",
+      "summary": "Added live catalog data factory for product/cart tests",
+      "files": [
+        "tests-ts/fixtures/dataFactory.ts",
+        "tests-ts/fixtures/singerTest.ts"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:55:57.437Z",
+      "summary": "Added visual regression coverage for homepage header and hero",
+      "files": [
+        "tests-ts/visual/homepage.visual.spec.ts",
+        "package.json"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T17:59:03.281Z",
+      "summary": "Added CI workflows for push sanity and scheduled regression",
+      "files": [
+        ".github/workflows/sanity.yml",
+        ".github/workflows/regression.yml"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T18:01:53.763Z",
+      "summary": "Updated Markdown documentation for recent framework improvements",
+      "files": [
+        "README.md",
+        "agent.md",
+        "docs/architecture.md",
+        "docs/environments.md",
+        "docs/walkthrough.md"
+      ]
+    },
+    {
+      "timestamp": "2026-05-24T18:03:49.253Z",
+      "summary": "Added clarifying inline comments to recent framework changes",
+      "files": [
+        "tests-ts/fixtures/globalSetup.ts",
+        "tests-ts/fixtures/dataFactory.ts",
+        "tests-ts/visual/homepage.visual.spec.ts",
+        "src/api/models.ts",
+        "src/pages/basePage.ts"
+      ]
     }
   ]
 }

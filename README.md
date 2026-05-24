@@ -68,6 +68,8 @@ npm run test:tag:smoke
 | Run smoke sanity       | `npm run test:tag:smoke`      |
 | Run full sanity suite  | `npm run test:sanity`         |
 | Run module specs       | `npm run test:sanity:modules` |
+| Run regression suite   | `npm run test:regression`     |
+| Run visual checks      | `npm run test:visual`         |
 | Run quality gate       | `npm run quality`             |
 | Open Playwright report | `npm run report:html`         |
 | Generate Allure report | `npm run report:allure`       |
@@ -84,6 +86,7 @@ npm run test:tag:smoke
 | Test selection   | Module specs and grep-friendly tags such as `@smoke`, `@cart`, `@search` |
 | Environments     | `.env`, `environments/dev.env`, `staging.env`, `prod.env`, CI overrides  |
 | Reports          | Playwright HTML, JUnit XML, Allure results, Allure HTML                  |
+| Visual checks    | Component screenshot baselines for critical storefront UI                |
 | Quality          | ESLint, Prettier, Husky pre-commit, lint-staged                          |
 | API support      | Typed API client, models, and catalog domain agent                       |
 | MCP support      | Local stdio MCP server exposing project metadata                         |
@@ -117,6 +120,7 @@ npx playwright install
 npm test
 npm run test:sanity
 npm run test:sanity:modules
+npm run test:regression
 ```
 
 ### Run By Tag
@@ -156,8 +160,8 @@ npx playwright test tests-ts/sanity/sanity.spec.ts --project=webkit --grep @sear
 ### Run One Module
 
 ```bash
-npx playwright test tests-ts/sanity/footer.spec.ts --workers=1
-npx playwright test tests-ts/sanity/cart.spec.ts --workers=1
+npx playwright test tests-ts/sanity/footer.spec.ts
+npx playwright test tests-ts/sanity/cart.spec.ts
 ```
 
 ### Debug
@@ -165,7 +169,7 @@ npx playwright test tests-ts/sanity/cart.spec.ts --workers=1
 ```bash
 npm run test:headed
 npm run test:ui
-HEADED=true npx playwright test tests-ts/sanity/authentication.spec.ts --workers=1
+HEADED=true npx playwright test tests-ts/sanity/authentication.spec.ts
 ```
 
 ### Run Quality Checks
@@ -189,6 +193,16 @@ npm run report:html
 npm run report:allure
 npm run report:allure:open
 ```
+
+### Run Visual Regression
+
+```bash
+npm run test:visual
+npm run test:visual:update
+```
+
+`test:visual` compares the homepage header and hero against committed baselines. Use `test:visual:update` only when an
+intentional visual change should become the new baseline.
 
 ### Start MCP Server
 
@@ -284,6 +298,10 @@ Load order:
 
 Shell and CI variables override env files. See [docs/environments.md](docs/environments.md) for details.
 
+Playwright runs `tests-ts/fixtures/globalSetup.ts` before tests start. The setup script loads the selected environment
+with `getSettings()` and performs a lightweight reachability check against `BASE_URL`, failing fast when the target
+environment is misconfigured or unavailable.
+
 ## Architecture Overview
 
 ```mermaid
@@ -306,6 +324,11 @@ More diagrams are available in [docs/architecture.md](docs/architecture.md):
 
 ```text
 Singer_BD_Automation/
+├── .github/
+│   └── workflows/
+│       ├── sanity.yml                # Push/PR sanity test workflow
+│       └── regression.yml            # Scheduled and manual regression workflow
+│
 ├── README.md                         # Main project guide
 ├── package.json                      # npm scripts and dependencies
 ├── package-lock.json                 # Locked dependency versions
@@ -365,7 +388,9 @@ Singer_BD_Automation/
 │   │   └── searchKeywords.ts         # Typed keyword export
 │   │
 │   ├── fixtures/
-│   │   └── singerTest.ts             # Shared test fixture and cleanup logic
+│   │   ├── dataFactory.ts            # API-backed live test data helpers
+│   │   ├── singerTest.ts             # Shared test fixture and cleanup logic
+│   │   └── globalSetup.ts            # Pre-test environment reachability check
 │   │
 │   └── sanity/                       # Sanity test suite
 │       ├── sanity.spec.ts            # Central full sanity suite
@@ -393,6 +418,10 @@ Singer_BD_Automation/
 │           ├── footer.ts             # SANITY_010/SANITY_018 footer links
 │           └── support.ts            # SANITY_019/SANITY_020 support checks
 │
+│   └── visual/                       # Visual regression suite and baselines
+│       ├── homepage.visual.spec.ts   # Homepage header and hero screenshot checks
+│       └── homepage.visual.spec.ts-snapshots/
+│
 ├── test-results/                     # Generated failure artifacts; ignored
 ├── playwright-report/                # Generated Playwright HTML report; ignored
 ├── allure-results/                   # Generated Allure result files; ignored
@@ -406,7 +435,8 @@ Singer_BD_Automation/
 | ------------ | --------------------------------- | ------------------------------------------------------ |
 | Specs        | `tests-ts/sanity/*.spec.ts`       | Suite entry points and grouping                        |
 | Cases        | `tests-ts/sanity/cases/*.ts`      | Business flow and assertions                           |
-| Fixtures     | `tests-ts/fixtures/singerTest.ts` | Shared Playwright setup and cleanup                    |
+| Fixtures     | `tests-ts/fixtures/*.ts`          | Shared Playwright setup, cleanup, and live test data   |
+| Visual specs | `tests-ts/visual/*.spec.ts`       | Screenshot baseline checks for critical UI components  |
 | Page objects | `src/pages/*.ts`                  | Locators and reusable UI actions                       |
 | Base helpers | `src/pages/basePage.ts`           | Navigation, waits, modal handling, robust clicks       |
 | API client   | `src/api/client.ts`               | HTTP transport, retry, status validation, JSON parsing |
@@ -422,8 +452,8 @@ Singer_BD_Automation/
 | `SANITY_002` | Category        | Opens the Small Appliances category page                    | `@sanity @category`        |
 | `SANITY_003` | Search          | Returns product results for configured search keywords      | `@sanity @search`          |
 | `SANITY_004` | Listing         | Shows products for the Washing Machine category             | `@sanity @listing`         |
-| `SANITY_005` | Product details | Opens PDP from a listing and validates title, price, action | `@sanity @product`         |
-| `SANITY_006` | Cart            | Adds a product to cart from PDP                             | `@sanity @cart`            |
+| `SANITY_005` | Product details | Opens PDP for a live in-stock product and validates core UI | `@sanity @product`         |
+| `SANITY_006` | Cart            | Adds a live in-stock product to cart                        | `@sanity @cart`            |
 | `SANITY_007` | Cart            | Opens the cart page directly and detects a known cart state | `@sanity @cart`            |
 | `SANITY_008` | Auth            | Opens the login modal from homepage                         | `@sanity @auth`            |
 | `SANITY_009` | Campaign        | Opens campaign page and validates EMI content               | `@sanity @campaign`        |
@@ -470,7 +500,7 @@ Useful commands:
 ```bash
 npm run report:html
 npx playwright show-trace test-results/<trace-file>/trace.zip
-HEADED=true npx playwright test tests-ts/sanity/authentication.spec.ts --workers=1
+HEADED=true npx playwright test tests-ts/sanity/authentication.spec.ts
 ```
 
 ## MCP Server
@@ -508,6 +538,9 @@ The same server is also declared in `.mcp.json` for MCP clients that support pro
 
 The framework is CI-ready through deterministic commands and report outputs.
 
+Playwright runs independent tests in parallel. CI is capped at 2 workers through `playwright.config.ts`; local runs use
+Playwright's default worker selection. Cart tests are kept in a serial group because they mutate guest cart state.
+
 Recommended CI steps:
 
 ```bash
@@ -517,6 +550,11 @@ npm run quality
 npm run test:sanity
 npm run report:allure
 ```
+
+GitHub Actions workflows:
+
+- `.github/workflows/sanity.yml` runs typecheck and Chromium sanity tests on every push to `main`, pull request, and manual dispatch.
+- `.github/workflows/regression.yml` runs typecheck and Chromium regression tests on a daily cron schedule and manual dispatch.
 
 Useful CI artifacts:
 

@@ -15,8 +15,6 @@ import {
 
 // Central entry point for full sanity execution and tag-based runs.
 test.describe("Singer BD sanity", () => {
-  test.describe.configure({ mode: "serial" });
-
   defineHomepageSanity();
   defineCategorySanity();
   defineSearchSanity();
