@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../fixtures/singerTest";
 
 import { CatalogApiAgent } from "../../src/api/agents/catalogAgent";
 import { ApiClient } from "../../src/api/client";
@@ -24,7 +24,7 @@ test.describe("Homepage regression", () => {
     const home = new HomePage(page, settings.baseUrl);
     await home.load();
     const uiSlugs = await home.getVisibleCategorySlugs(20);
-    const apiSlugs = (await apiAgent.getTopLevelCategories()).map((item) => item.slug);
+    const apiSlugs = (await apiAgent.getCategories()).map((item) => item.slug);
     const unexpected = uiSlugs.filter((slug) => !apiSlugs.includes(slug));
 
     await testInfo.attach("ui_category_slugs", { body: uiSlugs.join("\n"), contentType: "text/plain" });

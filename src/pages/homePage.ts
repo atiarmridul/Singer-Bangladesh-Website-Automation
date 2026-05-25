@@ -21,7 +21,7 @@ export class HomePage extends BasePage {
     // Prefer visible footer variants because the desktop viewport still renders a hidden mobile fixed footer.
     this.footer = this.byCss("footer:visible, [class*='footer']:visible");
     this.productCards = this.byCss(".product-card, a[href*='/product/']");
-    this.categoryLinks = this.byCss("a[href*='/category/'], a[href*='category=']");
+    this.categoryLinks = this.byCss("a[href*='/category/']");
   }
 
   async open(): Promise<void> {

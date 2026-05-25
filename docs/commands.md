@@ -32,6 +32,8 @@ npm run test:tag:cart
 npm run test:tag:search
 ```
 
+The npm tag scripts run Chromium only.
+
 Equivalent direct Playwright commands:
 
 ```bash

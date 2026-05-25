@@ -1,4 +1,6 @@
-import { expect, Page, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
+
+import { expect, test } from "../fixtures/singerTest";
 
 import { CatalogApiAgent } from "../../src/api/agents/catalogAgent";
 import { ApiClient } from "../../src/api/client";

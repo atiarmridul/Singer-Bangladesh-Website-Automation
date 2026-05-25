@@ -25,7 +25,7 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - status: in-progress
 - owner: codex
 - currentTask: Continue from existing handoff and keep progress tracker updated
-- lastUpdated: 2026-05-24T18:33:41.245Z
+- lastUpdated: 2026-05-25T04:00:50.303Z
 
 
 ## Next Steps
@@ -50,6 +50,8 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - Added generated human-readable test case catalog and docs update command
 - Split oversized root README into concise landing page plus focused docs
 - Updated category sanity tests to use live API-backed category fixture
+- Fixed tag sanity scripts to run Chromium only and verified smoke pass
+- Fixed regression UI specs to use shared Singer fixture and tightened homepage category selector
 
 
 ## Files Touched
