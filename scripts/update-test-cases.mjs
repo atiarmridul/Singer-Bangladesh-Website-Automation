@@ -125,6 +125,7 @@ const SHARED_METHOD_STEPS = new Map([
   ["url", "Read the current browser URL."]
 ]);
 
+// Lists TypeScript files inside one test folder.
 function listFiles(relativeDir) {
   const dir = path.join(ROOT, relativeDir);
   if (!fs.existsSync(dir)) {
@@ -138,10 +139,12 @@ function listFiles(relativeDir) {
     .map((file) => path.join(relativeDir, file));
 }
 
+// Reads one source file as text.
 function readText(relativePath) {
   return fs.readFileSync(path.join(ROOT, relativePath), "utf8");
 }
 
+// Reads data-driven search words used to expand search test titles.
 function readSearchKeywords() {
   const keywordFile = path.join(ROOT, "tests-ts/data/search-keywords.json");
   if (!fs.existsSync(keywordFile)) {
@@ -152,6 +155,7 @@ function readSearchKeywords() {
   return Array.isArray(parsed.keywords) ? parsed.keywords : [];
 }
 
+// Finds test cases in one file and pairs them with nearby Purpose/Risk comments.
 function extractTestsFromFile(file) {
   const source = readText(file);
   const lines = source.split("\n");
@@ -202,6 +206,7 @@ function extractTestsFromFile(file) {
   return tests;
 }
 
+// Pulls a test title from a normal string or template string.
 function extractTitle(line) {
   const quoteMatch = line.match(/test\(\s*["']([^"']+)["']/);
   if (quoteMatch) {
@@ -212,6 +217,7 @@ function extractTitle(line) {
   return templateMatch ? templateMatch[1] : "";
 }
 
+// Expands `${keyword}` titles into one title per configured search keyword.
 function expandTitleVariants(title) {
   if (!title.includes("${keyword}")) {
     return [title];
@@ -223,6 +229,7 @@ function expandTitleVariants(title) {
     : [title.replace("${keyword}", "<keyword>")];
 }
 
+// Collects the lines inside one test body.
 function collectTestBody(lines, startIndex) {
   const body = [];
   let braceDepth = 0;
@@ -251,6 +258,7 @@ function collectTestBody(lines, startIndex) {
   return body;
 }
 
+// Turns important code lines into business-readable execution steps.
 function extractSteps(bodyLines, title) {
   const steps = [];
 
@@ -269,6 +277,7 @@ function extractSteps(bodyLines, title) {
   return steps.length > 0 ? steps : ["Execute the Playwright test body and evaluate its assertions."];
 }
 
+// Decides whether one code line should appear as a test execution step.
 function isExecutionLine(line) {
   if (!line || line.startsWith("//")) {
     return false;
@@ -281,6 +290,7 @@ function isExecutionLine(line) {
   return line.startsWith("await ") || line.startsWith("expect(") || line.includes(" await ");
 }
 
+// Explains one executable line in plain words.
 function describeExecutionLine(line, title) {
   const normalized = line.replace(/;$/, "");
 
@@ -305,6 +315,7 @@ function describeExecutionLine(line, title) {
   return codeStep(normalized);
 }
 
+// Explains common Playwright assertions in plain words.
 function describeAssertion(line) {
   if (line.includes("toHaveScreenshot")) {
     return "Compare the target area against the committed screenshot baseline.";
@@ -365,23 +376,28 @@ function describeAssertion(line) {
   return "Verify the final assertion for this test case.";
 }
 
+// Gives a plain fallback sentence for unknown object method calls.
 function fallbackMethodStep(objectName, methodName) {
   return `${toSentence(methodName)} on ${toSentence(objectName).toLowerCase()}.`;
 }
 
+// Gives a plain fallback sentence for unknown helper calls.
 function fallbackHelperStep(helperName) {
   return `${toSentence(helperName)}.`;
 }
 
+// Replaces generic keyword wording with the actual data-driven keyword.
 function replaceKeyword(step, title) {
   const keyword = title.match(/'([^']+)'/)?.[1];
   return keyword ? step.replace("configured keyword", `'${keyword}'`) : step;
 }
 
+// Keeps an unknown line visible as code instead of hiding it.
 function codeStep(line) {
   return `Execute \`${line}\`.`;
 }
 
+// Turns camelCase helper names into readable sentences.
 function toSentence(value) {
   return `${value
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -389,6 +405,7 @@ function toSentence(value) {
     .replace(/^./, (character) => character.toUpperCase())}.`;
 }
 
+// Removes tags and extra spaces from a test title.
 function cleanTitle(title) {
   return title
     .replace(/@[^\s]+/g, "")
@@ -396,14 +413,17 @@ function cleanTitle(title) {
     .trim();
 }
 
+// Pulls Playwright tags like @sanity from a test title.
 function tagsFor(title) {
   return title.match(/@[a-zA-Z0-9_-]+/g) ?? [];
 }
 
+// Pulls explicit case IDs like SANITY_001 from a test title.
 function explicitIdFor(title) {
   return title.match(/\b[A-Z]+(?:_[A-Z]+)*_\d+\b/)?.[0] ?? "";
 }
 
+// Builds the whole Markdown test case catalog.
 function buildDocument(sections) {
   const output = [
     "# Test Case Catalog",
@@ -455,6 +475,7 @@ function buildDocument(sections) {
   return `${output.join("\n").trim()}\n`;
 }
 
+// Builds a simple Markdown table with aligned columns.
 function formatTable(headers, rows) {
   const parsedRows = rows.map((row) =>
     row
@@ -469,6 +490,7 @@ function formatTable(headers, rows) {
   return [formatRow(headers), separator, ...parsedRows.map(formatRow)];
 }
 
+// Guesses purpose text when a test has no inline Purpose comment.
 function inferPurpose(title) {
   if (title.includes("@visual")) {
     return "protects a critical storefront component against unintended layout or rendering changes.";
@@ -489,6 +511,7 @@ function inferPurpose(title) {
   return "documents and validates the named user journey.";
 }
 
+// Guesses risk text when a test has no inline Risk comment.
 function inferRisk(title) {
   if (title.includes("@visual")) {
     return "unexpected visual drift, broken layout, or missing critical UI components.";
@@ -509,6 +532,7 @@ function inferRisk(title) {
   return "broken navigation, missing content, or failed user-facing behavior.";
 }
 
+// Reads all test sections and writes docs/test-cases.md.
 function main() {
   const sections = TEST_SECTIONS.map((section) => ({
     ...section,

@@ -9,6 +9,7 @@ type SingerFixtures = {
   liveProduct: Product;
 };
 
+// Cleans browser storage after passed tests so the next test starts fresh.
 async function tearDownPassedTest(page: Page): Promise<void> {
   // Failed tests keep their context artifacts intact for traces, screenshots, and debugging.
   if (page.isClosed()) {

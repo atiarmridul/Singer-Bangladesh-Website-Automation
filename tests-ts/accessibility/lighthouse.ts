@@ -38,6 +38,7 @@ type PuppeteerCore = {
 // Lighthouse and Puppeteer are ESM packages; dynamic import keeps this CommonJS TypeScript project compatible.
 const dynamicImport = new Function("specifier", "return import(specifier)") as <T>(specifier: string) => Promise<T>;
 
+// Runs a Lighthouse accessibility audit and checks the score is high enough.
 export async function expectLighthouseAccessibilityScore(minimumScore = 0.6): Promise<void> {
   const settings = getSettings(process.env.TEST_ENV);
   const [{ snapshot }, chromeLauncher, puppeteer] = await Promise.all([

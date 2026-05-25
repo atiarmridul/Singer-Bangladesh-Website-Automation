@@ -5,14 +5,17 @@ import { ApiResponseError, NoDataError } from "../../exceptions";
 type JsonObject = Record<string, unknown>;
 
 export class CatalogApiAgent {
+  // Saves the API client this agent will use for catalog calls.
   constructor(private readonly apiClient: ApiClient) {}
 
+  // Checks that the catalog API is awake before deeper tests depend on it.
   async healthcheck(): Promise<string> {
     // This endpoint is a lightweight availability check used before deeper catalog assumptions.
     const response = await this.apiClient.get<JsonObject>("/api/global-setting");
     return String(response.status ?? "unknown");
   }
 
+  // Gets all categories from the API and converts them into Category objects.
   async getCategories(): Promise<Category[]> {
     const response = await this.apiClient.get<JsonObject>("/api/categories");
     const data = response.data;
@@ -34,6 +37,7 @@ export class CatalogApiAgent {
     });
   }
 
+  // Gets only the top-level categories shown on the homepage.
   async getTopLevelCategories(): Promise<Category[]> {
     const categories = await this.getCategories();
     // Top-level categories are what the homepage exposes, so child categories are filtered out.
@@ -44,6 +48,7 @@ export class CatalogApiAgent {
     return topLevel;
   }
 
+  // Gets products for one category page and converts them into Product objects.
   async getProducts(categorySlug: string, page = 1, limit = 12): Promise<Product[]> {
     if (!categorySlug) {
       throw new Error("categorySlug must be a non-empty string");

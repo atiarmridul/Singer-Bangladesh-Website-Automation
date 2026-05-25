@@ -24,6 +24,7 @@ type SelectorCandidate = {
   visibleCount: number;
 };
 
+// Collects possible replacement selectors from all AI test definitions.
 function selectorsFromDefinitions(): SelectorCandidate[] {
   const selectors: SelectorCandidate[] = [];
 
@@ -48,6 +49,7 @@ function selectorsFromDefinitions(): SelectorCandidate[] {
   return selectors;
 }
 
+// Reads a Playwright failure context file when one was provided.
 function failureText(): string {
   if (!failureContext || !fs.existsSync(failureContext)) {
     return "";
@@ -56,6 +58,7 @@ function failureText(): string {
   return fs.readFileSync(failureContext, "utf8");
 }
 
+// Opens the live site and counts how well each selector candidate matches visible elements.
 async function scoreCandidates(candidates: SelectorCandidate[]): Promise<SelectorCandidate[]> {
   const settings = getSettings(process.env.TEST_ENV);
   const browser = await chromium.launch({ headless: true });
@@ -87,6 +90,7 @@ async function scoreCandidates(candidates: SelectorCandidate[]): Promise<Selecto
   }
 }
 
+// Filters candidates, scores them, and prints the best repair ideas.
 async function main(): Promise<void> {
   const context = failureText();
   const candidates = selectorsFromDefinitions().filter((candidate) => {

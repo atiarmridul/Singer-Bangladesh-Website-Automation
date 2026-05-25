@@ -4,6 +4,7 @@ import { HomePage } from "../../../src/pages/homePage";
 import { SearchPage } from "../../../src/pages/searchPage";
 import { searchKeywords } from "../../data/searchKeywords";
 
+// Groups search sanity checks for each configured keyword.
 export function defineSearchSanity(): void {
   // Purpose: run the same search journey against representative high-traffic product keywords.
   // Risk covered: search form submission, search routing, and empty result listing regressions.

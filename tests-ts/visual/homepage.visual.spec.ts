@@ -1,5 +1,6 @@
 import { expect, test } from "../fixtures/singerTest";
 
+// Gets the homepage ready for screenshots by freezing motion and hiding temporary overlays.
 async function prepareVisualPage(page: import("@playwright/test").Page): Promise<void> {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/", { waitUntil: "domcontentloaded" });

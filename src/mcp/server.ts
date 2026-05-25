@@ -19,6 +19,7 @@ const readmePath = path.join(projectRoot, "README.md");
 const packageJsonPath = path.join(projectRoot, "package.json");
 const readmeUri = "singerbd://docs/readme";
 
+// Reads package.json scripts so MCP clients can see the safe project commands.
 async function loadScripts() {
   // Expose package scripts through MCP so agents can discover supported commands safely.
   const raw = await fs.readFile(packageJsonPath, "utf8");
@@ -39,6 +40,7 @@ server.registerResource(
     description: "Project overview from README.md",
     mimeType: "text/markdown"
   },
+  // Sends README text back when an MCP client asks for project context.
   async () => {
     // README is registered as a resource so tool clients can fetch project context without filesystem access.
     const text = await fs.readFile(readmePath, "utf8");
@@ -63,6 +65,7 @@ server.registerTool(
       contains: z.string().optional().describe("Optional substring filter for script names, e.g. smoke")
     }
   },
+  // Returns package scripts, optionally filtered by name.
   async ({ contains }) => {
     const scripts = await loadScripts();
     const filter = contains?.trim().toLowerCase();
@@ -85,6 +88,7 @@ server.registerTool(
   }
 );
 
+// Starts the MCP server over stdio.
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);

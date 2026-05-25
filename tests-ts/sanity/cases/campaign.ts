@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { CampaignPage } from "../../../src/pages/campaignPage";
 
+// Groups the campaign page sanity checks.
 export function defineCampaignSanity(): void {
   // Purpose: checks that the promotional campaign route loads visible campaign content.
   // Risk covered: campaign route outage, blank campaign page, or missing EMI promotion block.

@@ -10,6 +10,7 @@ const docsPath = path.join(repoRoot, "docs", "AGENT_PROGRESS.md");
 
 const allowedStatuses = new Set(["idle", "in-progress", "pending", "done"]);
 
+// Reads command-line flags and turns them into a small settings object.
 function parseArgs(argv) {
   const values = {
     status: undefined,
@@ -96,10 +97,12 @@ function parseArgs(argv) {
   return values;
 }
 
+// Removes blank and duplicate items from a list.
 function normalizeArray(items) {
   return [...new Set(items.map((item) => item.trim()).filter(Boolean))];
 }
 
+// Reads the progress file, or creates a starter object when it does not exist.
 async function readProgress() {
   try {
     const raw = await fs.readFile(progressPath, "utf8");
@@ -119,6 +122,7 @@ async function readProgress() {
   }
 }
 
+// Builds one history item that explains what changed in this update.
 function buildHistoryEntry(values) {
   const summaryParts = [];
   if (values.status) summaryParts.push(`status=${values.status}`);
@@ -139,6 +143,7 @@ function buildHistoryEntry(values) {
   };
 }
 
+// Turns the progress JSON into readable Markdown.
 function formatMarkdown(progress) {
   const sections = [
     `## Current Status`,
@@ -188,15 +193,18 @@ function formatMarkdown(progress) {
   );
 }
 
+// Saves the progress JSON file.
 async function writeProgress(progress) {
   await fs.writeFile(progressPath, `${JSON.stringify(progress, null, 2)}\n`, "utf8");
 }
 
+// Saves the Markdown progress guide.
 async function writeDocs(progress) {
   const content = `# Agent Progress Tracking\n\nThis file is generated from \`agent_progress.json\`.\n\n## How to start a session\n\nRun a new agent session with owner identification:\n\n\`\`\`bash\nnpm run agent:start -- --owner <agent-id> --sync-doc\n\`\`\`\n\nIf you set \`AGENT_ID\` in the environment, the script uses it automatically when \`--owner\` is omitted.\n\n## How to update progress\n\nUpdate the JSON and regenerate the docs in one step:\n\n\`\`\`bash\nnpm run agent:progress -- --completed "Updated feature X" --sync-doc\n\`\`\`\n\n${formatMarkdown(progress)}`;
   await fs.writeFile(docsPath, content, "utf8");
 }
 
+// Applies requested progress changes and writes the updated files.
 async function main() {
   const values = parseArgs(process.argv.slice(2));
 

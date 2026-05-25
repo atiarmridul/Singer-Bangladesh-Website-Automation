@@ -6,6 +6,7 @@ import { BasePage } from "./basePage";
 export class SearchPage extends BasePage {
   readonly productCards: Locator;
 
+  // Builds the locator for products shown in search results.
   constructor(page: Page) {
     super(page);
     // Search results use the same product card/link shapes as category listings.

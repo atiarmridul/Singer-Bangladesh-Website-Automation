@@ -144,6 +144,7 @@ const selectors = {
   }
 };
 
+// Reads the Markdown catalog and pulls out each written test case.
 function parseCatalog(markdown) {
   const cases = [];
   let section = "";
@@ -191,6 +192,7 @@ function parseCatalog(markdown) {
   return cases;
 }
 
+// Turns a title or ID into a lowercase filename-friendly slug.
 function slug(value) {
   return value
     .toLowerCase()
@@ -198,6 +200,7 @@ function slug(value) {
     .replace(/^-|-$/g, "");
 }
 
+// Keeps IDs unique when one catalog case expands into multiple examples.
 function uniqueId(testCase, seen) {
   if (!seen.has(testCase.id)) {
     seen.add(testCase.id);
@@ -216,6 +219,7 @@ function uniqueId(testCase, seen) {
   return id;
 }
 
+// Builds the repeated steps for opening a category listing page.
 function categoryListingSteps(slugValue = "television") {
   return [
     { action: "goto", path: `/category/${slugValue}?category=${slugValue}&page=1&limit=12` },
@@ -224,6 +228,7 @@ function categoryListingSteps(slugValue = "television") {
   ];
 }
 
+// Builds the repeated steps for opening the first product from a listing.
 function openFirstProductSteps() {
   return [
     ...categoryListingSteps("television"),
@@ -233,6 +238,7 @@ function openFirstProductSteps() {
   ];
 }
 
+// Explains why some catalog cases cannot be generated with the current simple JSON actions.
 function unsupportedReason(testCase) {
   if (testCase.section === "Visual Regression Tests")
     return "visual screenshot baselines are not supported by ai/generate-test.ts";
@@ -246,6 +252,7 @@ function unsupportedReason(testCase) {
   return "";
 }
 
+// Converts one catalog test case into JSON generator steps.
 function stepsFor(testCase) {
   const title = testCase.title.toLowerCase();
 
@@ -444,6 +451,7 @@ function stepsFor(testCase) {
   return [];
 }
 
+// Writes one JSON definition file to ai/definitions.
 function writeDefinition(testCase, id) {
   const tags = Array.from(new Set(["@ai", "@catalog", ...testCase.tags]));
   const definition = {

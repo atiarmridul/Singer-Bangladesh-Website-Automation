@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { LoginPage } from "../../../src/pages/loginPage";
 
+// Groups the login and account-entry sanity checks.
 export function defineAuthenticationSanity(): void {
   // Purpose: confirms the unauthenticated login entry point is reachable from the homepage.
   // Risk covered: missing login button, blocked click, or login panel copy not rendering.

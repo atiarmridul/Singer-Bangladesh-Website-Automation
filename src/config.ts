@@ -20,10 +20,12 @@ export interface Settings {
   productsLimit: number;
 }
 
+// Finds the project folder, like finding the home base for all files.
 function rootDir(): string {
   return path.resolve(__dirname, "..");
 }
 
+// Reads one .env file and turns it into key/value settings.
 function parseEnvFile(filePath: string): Record<string, string> {
   // Missing env files are allowed for the default local run; selected TEST_ENV files are validated later.
   if (!fs.existsSync(filePath)) {
@@ -32,6 +34,7 @@ function parseEnvFile(filePath: string): Record<string, string> {
   return dotenv.parse(fs.readFileSync(filePath));
 }
 
+// Turns words like "true" or "yes" into a real boolean.
 function toBool(value: string | boolean | undefined, fallback = false): boolean {
   // Accept common CI-friendly truthy values so env files and shell variables behave the same way.
   if (typeof value === "boolean") return value;
@@ -39,6 +42,7 @@ function toBool(value: string | boolean | undefined, fallback = false): boolean 
   return ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
 }
 
+// Reads a setting as a number and fails if it is not a usable integer.
 function toPositiveInt(key: string, value: string | undefined, fallback: number): number {
   // Parse first, then range-check in getSettings so error messages include the original config key.
   const parsed = Number.parseInt(value ?? String(fallback), 10);
@@ -48,6 +52,7 @@ function toPositiveInt(key: string, value: string | undefined, fallback: number)
   return parsed;
 }
 
+// Checks that a setting is shaped like a real website URL.
 function assertUrl(key: string, value: string): void {
   try {
     const parsed = new URL(value);
@@ -64,6 +69,7 @@ function assertUrl(key: string, value: string): void {
   }
 }
 
+// Checks that the selected browser is one Playwright understands.
 function assertBrowser(value: string): asserts value is BrowserName {
   const browsers = new Set(["chromium", "firefox", "webkit"]);
   if (!browsers.has(value)) {
@@ -71,6 +77,7 @@ function assertBrowser(value: string): asserts value is BrowserName {
   }
 }
 
+// Builds the final settings object from env files and process variables.
 export function getSettings(envName?: string): Settings {
   const root = rootDir();
   const values: Record<string, string | undefined> = {};

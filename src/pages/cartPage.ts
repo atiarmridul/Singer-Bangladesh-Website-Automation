@@ -30,6 +30,7 @@ export class CartPage extends BasePage {
   readonly cartItems: Locator;
   readonly emptyCartMessage: Locator;
 
+  // Builds locators for cart content, cart count, and empty-cart messages.
   constructor(page: Page) {
     super(page);
     this.body = this.byCss("body");
@@ -39,10 +40,12 @@ export class CartPage extends BasePage {
     this.emptyCartMessage = this.byCss(emptyCartMessageSelectors.join(", "));
   }
 
+  // Opens the cart page directly.
   async open(): Promise<void> {
     await this.goto("/cart");
   }
 
+  // Decides whether the cart has items, is empty, or cannot be recognized.
   async getCartState(): Promise<CartState> {
     // Wait for any recognizable cart surface before deciding whether the page has items or is empty.
     await this.firstVisibleLocator([...cartItemSelectors, ...emptyCartMessageSelectors, "main", "body"], 10_000);
@@ -58,6 +61,7 @@ export class CartPage extends BasePage {
     return "unknown";
   }
 
+  // Returns the cart state, but fails if the page does not look like a cart.
   async expectKnownCartState(): Promise<CartState> {
     const state = await this.getCartState();
     if (state === "unknown") {
@@ -67,6 +71,7 @@ export class CartPage extends BasePage {
     return state;
   }
 
+  // Checks if any selector in a list has at least one visible match.
   private async hasVisibleMatch(selectors: string[]): Promise<boolean> {
     // Check each match individually because hidden template nodes may share the same selector.
     for (const selector of selectors) {

@@ -3,6 +3,7 @@ import { expect, test } from "../../fixtures/singerTest";
 import { CartPage } from "../../../src/pages/cartPage";
 import { ProductPage } from "../../../src/pages/productPage";
 
+// Groups cart journey sanity checks.
 export function defineCartSanity(): void {
   test.describe("Cart state sanity", () => {
     test.describe.configure({ mode: "serial" });

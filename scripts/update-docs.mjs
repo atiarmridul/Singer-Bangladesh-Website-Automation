@@ -3,14 +3,17 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 
+// Reads a JSON file, like package.json.
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
+// Checks if a path exists inside the repo.
 function exists(relPath) {
   return fs.existsSync(path.join(ROOT, relPath));
 }
 
+// Lists files in a folder, optionally keeping only one file extension.
 function listFiles(relDir, ext) {
   // Walk directories manually so docs generation stays dependency-free in CI.
   const out = [];
@@ -36,6 +39,7 @@ function listFiles(relDir, ext) {
   return out.sort((a, b) => a.localeCompare(b));
 }
 
+// Writes a file only when the content really changed.
 function writeIfChanged(relPath, content) {
   // Avoid rewriting generated docs when content is unchanged; this keeps CI diffs quiet.
   const abs = path.join(ROOT, relPath);
@@ -47,6 +51,7 @@ function writeIfChanged(relPath, content) {
   return true;
 }
 
+// Builds the README text from the current project files and scripts.
 function buildReadme() {
   // README is generated from the current repo shape so setup docs do not drift from scripts/files.
   const pkg = readJson(path.join(ROOT, "package.json"));
@@ -121,6 +126,7 @@ function buildReadme() {
   return lines.join("\n");
 }
 
+// Builds the automation guide text from the current project layout.
 function buildAgentGuide() {
   // Agent guide mirrors the automation architecture for future Codex/MCP-assisted maintenance.
   const agentFiles = listFiles("src/api/agents", ".ts")

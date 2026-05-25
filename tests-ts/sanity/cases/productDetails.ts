@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { ProductPage } from "../../../src/pages/productPage";
 
+// Groups product detail page sanity checks.
 export function defineProductDetailsSanity(): void {
   // Purpose: opens a live in-stock product from API-backed test data.
   // Risk covered: stale hardcoded products, out-of-stock test data, missing PDP title/price, or missing primary action.

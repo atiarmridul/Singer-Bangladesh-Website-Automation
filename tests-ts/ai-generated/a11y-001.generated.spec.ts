@@ -2,6 +2,7 @@ import type { Locator, Page } from "@playwright/test";
 import { expect, test } from "../fixtures/singerTest";
 import { checkA11y } from "../accessibility/a11y";
 
+// Closes popups that can cover buttons during generated tests.
 async function dismissBlockingModals(page: Page): Promise<void> {
   const modal = page.locator(".modal-wrapper:visible").last();
 
@@ -25,6 +26,7 @@ async function dismissBlockingModals(page: Page): Promise<void> {
     .catch(() => undefined);
 }
 
+// Fills normal inputs, and also helps readonly inputs by sending browser events.
 async function robustFill(locator: Locator, value: string): Promise<void> {
   const target = locator.first();
 
@@ -39,6 +41,7 @@ async function robustFill(locator: Locator, value: string): Promise<void> {
   });
 }
 
+// Opens links by href, and clicks normal buttons.
 async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
   const target = locator.first();
   const href = await target.getAttribute("href").catch(() => null);

@@ -5,6 +5,7 @@ import { ConfigurationError } from "../../src/exceptions";
 
 const reachableStatuses = new Set([200, 301, 302, 304, 401, 403]);
 
+// Checks the target website is reachable before browser tests spend time running.
 async function globalSetup(_config: FullConfig): Promise<void> {
   const settings = getSettings(process.env.TEST_ENV);
   const controller = new AbortController();

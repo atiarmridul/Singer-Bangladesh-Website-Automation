@@ -1,3 +1,4 @@
+// Pulls the slug out of a URL path, like "television" from "/category/television".
 export function extractSlugFromHref(href: string | null | undefined, prefix: string): string | null {
   if (!href) return null;
   // Escape the route prefix because this helper is shared by product and category URL checks.
@@ -6,6 +7,7 @@ export function extractSlugFromHref(href: string | null | undefined, prefix: str
   return match?.[1] ?? null;
 }
 
+// Pulls a category slug from either the path or the category query parameter.
 export function extractCategorySlug(href: string | null | undefined): string | null {
   const slug = extractSlugFromHref(href, "category");
   if (slug) return slug;

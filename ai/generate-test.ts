@@ -20,6 +20,7 @@ const args = new Map(
 const inputDir = path.resolve(args.get("input") ?? "ai/definitions");
 const outputDir = path.resolve(args.get("out") ?? "tests-ts/ai-generated");
 
+// Turns one selector definition into Playwright code that can find the element.
 function locatorExpression(selector: SelectorDefinition): string {
   if (selector.role) {
     const roleOptions = selector.name ? `, { name: ${JSON.stringify(selector.name)} }` : "";
@@ -41,10 +42,12 @@ function locatorExpression(selector: SelectorDefinition): string {
   throw new Error(`Selector '${selector.description}' must define role, placeholder, text, or css`);
 }
 
+// Escapes text so it can be safely used inside a generated regular expression.
 function regexLiteral(pattern: string): string {
   return `/${pattern.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&")}/i`;
 }
 
+// Turns one JSON step into one or more Playwright code lines.
 function renderStep(step: TestStep): string[] {
   switch (step.action) {
     case "goto":
@@ -71,6 +74,7 @@ function renderStep(step: TestStep): string[] {
   }
 }
 
+// Chooses imports needed by the generated test file.
 function importsFor(testCase: GeneratedTestCase): string {
   const usesA11y = testCase.steps.some((step) => step.action === "checkA11y");
   const imports = [
@@ -85,8 +89,10 @@ function importsFor(testCase: GeneratedTestCase): string {
   return imports.join("\n");
 }
 
+// Writes helper code into every generated spec so generated tests can handle popups and tricky inputs.
 function helperFunctions(): string {
-  return `async function dismissBlockingModals(page: Page): Promise<void> {
+  return `// Closes popups that can cover buttons during generated tests.
+async function dismissBlockingModals(page: Page): Promise<void> {
   const modal = page.locator(".modal-wrapper:visible").last();
 
   if (!(await modal.isVisible({ timeout: 1_000 }).catch(() => false))) {
@@ -105,6 +111,7 @@ function helperFunctions(): string {
   await expect(modal).toBeHidden({ timeout: 3_000 }).catch(() => undefined);
 }
 
+// Fills normal inputs, and also helps readonly inputs by sending browser events.
 async function robustFill(locator: Locator, value: string): Promise<void> {
   const target = locator.first();
 
@@ -119,6 +126,7 @@ async function robustFill(locator: Locator, value: string): Promise<void> {
   });
 }
 
+// Opens links by href, and clicks normal buttons.
 async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
   const target = locator.first();
   const href = await target.getAttribute("href").catch(() => null);
@@ -135,6 +143,7 @@ async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
 `;
 }
 
+// Turns one parsed test definition into a complete Playwright spec file.
 function renderTest(testCase: GeneratedTestCase): string {
   const title = `${testCase.tags.join(" ")} ${testCase.id} ${testCase.title}`.trim();
   const needsTestInfo = testCase.steps.some((step) => step.action === "checkA11y");
@@ -155,6 +164,7 @@ ${body.join("\n")}
 `;
 }
 
+// Regenerates all generated specs from the JSON definition folder.
 function main(): void {
   fs.mkdirSync(outputDir, { recursive: true });
 

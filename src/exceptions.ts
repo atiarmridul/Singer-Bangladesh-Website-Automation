@@ -1,4 +1,5 @@
 export class ApiError extends Error {
+  // Makes a simple API error with a clear name.
   constructor(message: string) {
     super(message);
     this.name = "ApiError";
@@ -6,6 +7,7 @@ export class ApiError extends Error {
 }
 
 export class ApiClientError extends Error {
+  // Adds API status, URL, and response details to one readable error message.
   constructor(
     message: string,
     readonly statusCode?: number,
@@ -23,6 +25,7 @@ export class ApiClientError extends Error {
 }
 
 export class ApiResponseError extends Error {
+  // Makes an error for API data that has the wrong shape.
   constructor(message: string) {
     super(message);
     this.name = "ApiResponseError";
@@ -30,6 +33,7 @@ export class ApiResponseError extends Error {
 }
 
 export class PageLoadError extends Error {
+  // Adds page URL and waiting details when a page fails to load.
   constructor(
     message: string,
     readonly pageUrl?: string,
@@ -50,6 +54,7 @@ export class PageLoadError extends Error {
 }
 
 export class ConfigurationError extends Error {
+  // Adds the bad config key and allowed values to help fix setup mistakes.
   constructor(
     message: string,
     readonly configKey?: string,
@@ -67,6 +72,7 @@ export class ConfigurationError extends Error {
 }
 
 export class NoDataError extends Error {
+  // Makes an error for empty API results when tests need real data.
   constructor(message: string) {
     super(message);
     this.name = "NoDataError";

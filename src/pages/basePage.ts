@@ -17,19 +17,23 @@ type SelectorCandidate = {
 
 // Shared base class for all Page Object Model classes.
 export abstract class BasePage {
+  // Builds the shared page helper with the browser page and optional website address.
   protected constructor(
     protected readonly page: Page,
     private readonly baseUrl?: string
   ) {}
 
+  // Finds things on the page with a CSS selector, like pointing at a label on a shelf.
   protected byCss(selector: string): Locator {
     return this.page.locator(selector);
   }
 
+  // Gives tests a simple public way to find an element by CSS.
   find(selector: string): Locator {
     return this.byCss(selector);
   }
 
+  // Tries a list of selectors and returns the first one a user can actually see.
   protected async firstVisibleLocator(selectors: string[], timeout = 5_000): Promise<Locator> {
     // Ecommerce pages often swap markup during hydration; try fallback selectors until one is truly visible.
     const deadline = Date.now() + timeout;
@@ -48,10 +52,12 @@ export abstract class BasePage {
     throw new Error(`Expected one selector to become visible: ${selectors.join(", ")}`);
   }
 
+  // Returns the main selector for a self-healing locator definition.
   protected selfHealingPrimary(definition: SelfHealingLocatorDefinition): Locator {
     return this.byCss(definition.primary);
   }
 
+  // Finds the best visible locator from the primary, fallback, or similar DOM choices.
   protected async resolveSelfHealingLocator(
     definition: SelfHealingLocatorDefinition,
     timeout = 5_000
@@ -59,6 +65,7 @@ export abstract class BasePage {
     return this.byCss(await this.resolveSelfHealingSelector(definition, timeout)).first();
   }
 
+  // Finds the selector string that currently works for a self-healing element.
   protected async resolveSelfHealingSelector(
     definition: SelfHealingLocatorDefinition,
     timeout = 5_000
@@ -85,16 +92,19 @@ export abstract class BasePage {
     throw new Error(`Unable to resolve self-healing locator '${definition.name}'. Tried: ${selectors.join(", ")}`);
   }
 
+  // Checks that a self-healing element is visible on the page.
   async expectSelfHealingVisible(definition: SelfHealingLocatorDefinition, timeout = 5_000): Promise<void> {
     const locator = await this.resolveSelfHealingLocator(definition, timeout);
     await this.expectVisible(locator, `${definition.name} should be visible`);
   }
 
+  // Clicks a self-healing element after finding the selector that works today.
   async clickSelfHealing(definition: SelfHealingLocatorDefinition, timeout = 5_000): Promise<void> {
     const locator = await this.resolveSelfHealingLocator(definition, timeout);
     await this.clickWhenReady(locator);
   }
 
+  // Looks through the page for an element that seems similar when known selectors changed.
   private async findSimilarDomCandidate(definition: SelfHealingLocatorDefinition): Promise<SelectorCandidate | null> {
     const candidate = await this.page.evaluate(
       (input) => {
@@ -104,6 +114,7 @@ export abstract class BasePage {
           element.checkVisibility()
         );
 
+        // Builds a CSS path so Playwright can find this same element later.
         function cssPath(element: HTMLElement): string {
           if (element.id) {
             return `#${CSS.escape(element.id)}`;
@@ -131,6 +142,7 @@ export abstract class BasePage {
           return parts.join(" > ");
         }
 
+        // Gives higher scores to elements that look like the thing we wanted.
         function scoreElement(element: HTMLElement): number {
           const searchableText = [
             element.innerText,
@@ -182,6 +194,7 @@ export abstract class BasePage {
     return candidate ? { selector: candidate.selector, source: "dom-similarity" } : null;
   }
 
+  // Opens a page and waits until the main loading work is done.
   async goto(pathname: string): Promise<void> {
     const normalizedPath = pathname.startsWith("/") || /^https?:\/\//i.test(pathname) ? pathname : `/${pathname}`;
     const target =
@@ -200,12 +213,14 @@ export abstract class BasePage {
     }
   }
 
+  // Waits for the page to settle enough for normal checks.
   async waitForPageReady(): Promise<void> {
     await this.page.waitForLoadState("domcontentloaded");
     // Network idle can be noisy on ecommerce pages, so timeout is non-fatal.
     await this.page.waitForLoadState("networkidle", { timeout: 10_000 }).catch(() => undefined);
   }
 
+  // Waits until a matching API call succeeds, so tests do not need blind sleeps.
   async waitForNetworkResponse(urlPattern: string, timeout = 15_000): Promise<Response> {
     // Use this before actions that trigger API hydration so tests can wait on a domain signal instead of sleeping.
     return await this.page.waitForResponse((response) => response.url().includes(urlPattern) && response.ok(), {
@@ -213,6 +228,7 @@ export abstract class BasePage {
     });
   }
 
+  // Closes popups that can sit on top of buttons and block clicks.
   async dismissBlockingModals(): Promise<void> {
     // The spin wheel and similar overlays block clicks; close the topmost visible one.
     const modal = this.page.locator(".modal-wrapper:visible").last();
@@ -237,19 +253,23 @@ export abstract class BasePage {
     }
   }
 
+  // Checks that an element can be seen by the user.
   async expectVisible(locator: Locator, description?: string): Promise<void> {
     await expect(locator.first(), description).toBeVisible();
   }
 
+  // Checks that an element includes some expected words.
   async expectTextContains(locator: Locator, text: string): Promise<void> {
     await expect(locator.first()).toContainText(text, { ignoreCase: true });
   }
 
+  // Checks that the browser URL contains the expected text.
   async expectUrlContains(value: string): Promise<void> {
     // Treat expected URL fragments literally so characters like ? or + do not become regex operators.
     await expect(this.page).toHaveURL(new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
 
+  // Keeps counting elements until there are more than the requested number.
   async expectCountGreaterThan(locator: Locator, minimum: number): Promise<void> {
     // Polling avoids flaky failures while product grids finish rendering after navigation.
     await expect
@@ -259,6 +279,7 @@ export abstract class BasePage {
       .toBeGreaterThan(minimum);
   }
 
+  // Waits for an element, clears popups, clicks it, and lets the page finish loading.
   async clickWhenReady(locator: Locator): Promise<void> {
     const target = locator.first();
 

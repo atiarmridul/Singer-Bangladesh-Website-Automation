@@ -11,15 +11,18 @@ export class TestDataFactory {
   private readonly settings: Settings;
   private readonly catalogApiAgent: CatalogApiAgent;
 
+  // Builds the API helper used to fetch live categories and products.
   constructor(settings = getSettings(process.env.TEST_ENV)) {
     this.settings = settings;
     this.catalogApiAgent = new CatalogApiAgent(new ApiClient(settings.apiBaseUrl, settings.timeoutMs));
   }
 
+  // Gets top-level categories from the live catalog.
   async getTopLevelCategories(): Promise<Category[]> {
     return await this.catalogApiAgent.getTopLevelCategories();
   }
 
+  // Picks one top-level category, either the first one or a random one.
   async getTopLevelCategory(selection: CategorySelection = "random"): Promise<Category> {
     const categories = await this.getTopLevelCategories();
 
@@ -34,6 +37,7 @@ export class TestDataFactory {
     return categories[0];
   }
 
+  // Finds a top-level category that actually has products.
   async getTopLevelCategoryWithProducts(selection: CategorySelection = "random"): Promise<Category> {
     const categories = await this.getTopLevelCategories();
     const candidateCategories = selection === "random" ? [...categories].sort(() => Math.random() - 0.5) : categories;
@@ -48,6 +52,7 @@ export class TestDataFactory {
     throw new NoDataError("No top-level categories with products found");
   }
 
+  // Gets products from one category using the configured limit by default.
   async getProducts(
     categorySlug = this.settings.defaultCategory,
     limit = this.settings.productsLimit
@@ -55,6 +60,7 @@ export class TestDataFactory {
     return await this.catalogApiAgent.getProducts(categorySlug, 1, limit);
   }
 
+  // Finds an in-stock product inside one category.
   async getInStockProduct(
     categorySlug = this.settings.defaultCategory,
     selection: ProductSelection = "first"
@@ -74,6 +80,7 @@ export class TestDataFactory {
     return inStockProducts[0];
   }
 
+  // Looks across categories until it finds any product that can be bought.
   async getAnyInStockProduct(selection: ProductSelection = "first"): Promise<Product> {
     const categories = await this.getTopLevelCategories();
     // Prefer the configured category for deterministic runs, then fall back across the live top-level catalog.
@@ -96,6 +103,7 @@ export class TestDataFactory {
   }
 }
 
+// Creates the default live test data factory.
 export function createTestDataFactory(): TestDataFactory {
   return new TestDataFactory();
 }

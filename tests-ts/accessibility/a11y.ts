@@ -10,6 +10,7 @@ export interface A11yOptions {
 
 const defaultTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
+// Runs axe on a page and fails only for the selected accessibility impact levels.
 export async function checkA11y(page: Page, testInfo?: TestInfo, options: A11yOptions = {}): Promise<void> {
   // The live storefront has known serious issues; keep the default gate focused on release-blocking defects.
   const includedImpacts = options.includedImpacts ?? ["critical"];
@@ -30,6 +31,7 @@ export async function checkA11y(page: Page, testInfo?: TestInfo, options: A11yOp
   expect(violations, formatViolations(violations)).toEqual([]);
 }
 
+// Builds a readable message that points to each broken accessibility rule.
 function formatViolations(violations: Awaited<ReturnType<AxeBuilder["analyze"]>>["violations"]): string {
   if (violations.length === 0) {
     return "No accessibility violations found";

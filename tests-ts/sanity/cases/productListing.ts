@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { CategoryPage } from "../../../src/pages/categoryPage";
 
+// Groups product listing sanity checks.
 export function defineProductListingSanity(): void {
   // Purpose: validates that a known listing page renders real products.
   // Risk covered: broken category listing, no product cards, or product-link selector drift.

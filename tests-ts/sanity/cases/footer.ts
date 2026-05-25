@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { FooterPage } from "../../../src/pages/footerPage";
 
+// Groups footer link sanity checks.
 export function defineFooterSanity(): void {
   // Purpose: validates a legal/footer navigation link that users commonly need after page load.
   // Risk covered: footer not rendering, link target drift, or modal overlay blocking footer clicks.

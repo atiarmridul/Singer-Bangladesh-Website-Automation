@@ -12,8 +12,8 @@ test.describe("Product details regression", () => {
   const settings = getSettings(process.env.TEST_ENV);
   const apiAgent = new CatalogApiAgent(new ApiClient(settings.apiBaseUrl, settings.timeoutMs));
 
+  // Opens the first live product from a category so product checks use real catalog data.
   async function openFirstProductFromCategory(page: Page): Promise<ProductPage> {
-    // Shared journey: use a live listing item so product-detail checks stay aligned with real catalog data.
     const category = new CategoryPage(page, settings.baseUrl);
     await category.load(settings.defaultCategory, 1, settings.productsLimit);
     await category.assertLoaded();

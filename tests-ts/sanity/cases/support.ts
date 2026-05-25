@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { SupportPage } from "../../../src/pages/supportPage";
 
+// Groups FAQ and store locator support sanity checks.
 export function defineSupportSanity(): void {
   // Purpose: validates FAQ client-side search so customers can quickly find self-service answers.
   // Risk covered: FAQ search input missing, filter state broken, or expected help content not rendered.

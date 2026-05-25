@@ -4,11 +4,13 @@ export class ApiClient {
   private readonly baseUrl: string;
   private readonly timeoutMs: number;
 
+  // Stores the API base address and how long one request may wait.
   constructor(baseUrl: string, timeoutMs = 30_000) {
     this.baseUrl = baseUrl.replace(/\/$/, "");
     this.timeoutMs = timeoutMs;
   }
 
+  // Sends a GET request and returns parsed JSON when the API answers correctly.
   async get<T extends Record<string, unknown>>(
     requestPath: string,
     params?: Record<string, string | number>
@@ -33,6 +35,7 @@ export class ApiClient {
     }
   }
 
+  // Builds the full URL, including query parameters.
   private buildUrl(requestPath: string, params?: Record<string, string | number>): string {
     const path = requestPath.startsWith("/") ? requestPath : `/${requestPath}`;
     const url = new URL(path, `${this.baseUrl}/`);
@@ -43,6 +46,7 @@ export class ApiClient {
     return url.toString();
   }
 
+  // Fails fast when the API returns an HTTP error status.
   private async validateStatus(response: Response, url: string): Promise<void> {
     if (response.status < 400) {
       return;
@@ -57,6 +61,7 @@ export class ApiClient {
     );
   }
 
+  // Parses JSON and makes sure the response is an object, not a list or text.
   private async parseJson<T extends Record<string, unknown>>(response: Response, url: string): Promise<T> {
     const text = await response.text();
     let data: unknown;

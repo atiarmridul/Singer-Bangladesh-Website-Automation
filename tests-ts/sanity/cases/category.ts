@@ -2,6 +2,7 @@ import { test } from "../../fixtures/singerTest";
 
 import { CategoryPage } from "../../../src/pages/categoryPage";
 
+// Groups live category page sanity checks.
 export function defineCategorySanity(): void {
   // Purpose: checks a live top-level category route selected from API-backed test data.
   // Risk covered: stale hardcoded categories, category route regression, empty body, or category page not rendering.

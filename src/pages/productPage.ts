@@ -15,6 +15,7 @@ export class ProductPage extends BasePage {
   readonly description: Locator;
   readonly brand: Locator;
 
+  // Builds the locators for the product list and product detail page.
   constructor(page: Page, baseUrl?: string) {
     super(page, baseUrl);
     // The first product link is used to move from a listing page into a real PDP.
@@ -30,23 +31,28 @@ export class ProductPage extends BasePage {
     this.brand = this.byCss("main").getByText(/brand/i);
   }
 
+  // Opens one product page by its slug.
   async load(productSlug: string): Promise<void> {
     await this.goto(`/product/${productSlug}`);
   }
 
+  // Checks that the browser is on a product page and a title is visible.
   async assertLoaded(): Promise<void> {
     await this.expectUrlContains("/product/");
     await this.expectVisible(this.productTitle);
   }
 
+  // Checks that the current product URL still contains the expected product slug.
   assertUrlContainsProductSlug(productSlug: string): void {
     expect(this.page.url()).toContain(productSlug);
   }
 
+  // Reads the product title text, or returns an empty string if it is missing.
   async getProductTitle(): Promise<string> {
     return (await this.productTitle.first().textContent())?.trim() ?? "";
   }
 
+  // Reads the product price text, or returns an empty string if it is missing.
   async getProductPrice(): Promise<string> {
     return (
       (
@@ -58,6 +64,7 @@ export class ProductPage extends BasePage {
     );
   }
 
+  // Reads the product brand text when the page shows it.
   async getProductBrand(): Promise<string> {
     const explicitBrand = await this.brand
       .first()
@@ -70,10 +77,12 @@ export class ProductPage extends BasePage {
     return "";
   }
 
+  // Counts product pictures so tests know the gallery loaded.
   async getProductImagesCount(): Promise<number> {
     return await this.productImages.count();
   }
 
+  // Reads the stock status text from the product page.
   async getStockStatus(): Promise<string> {
     return (
       (
@@ -85,11 +94,13 @@ export class ProductPage extends BasePage {
     );
   }
 
+  // Turns the stock text into a simple yes/no answer.
   async isProductInStock(): Promise<boolean> {
     const stockText = await this.getStockStatus();
     return /in stock|available/i.test(stockText) && !/out of stock|unavailable/i.test(stockText);
   }
 
+  // Checks if the Add to Cart button is visible.
   async isAddToCartButtonVisible(): Promise<boolean> {
     return await this.addToCartButton
       .first()
@@ -97,6 +108,7 @@ export class ProductPage extends BasePage {
       .catch(() => false);
   }
 
+  // Checks if a reviews or ratings area is visible.
   async isReviewsSectionVisible(): Promise<boolean> {
     return await this.reviewsSection
       .first()
@@ -104,6 +116,7 @@ export class ProductPage extends BasePage {
       .catch(() => false);
   }
 
+  // Reads the product description when it is available.
   async getProductDescription(): Promise<string> {
     return (
       (
@@ -115,6 +128,7 @@ export class ProductPage extends BasePage {
     );
   }
 
+  // Opens the first product from a listing by using its link address.
   async openFirstProductFromListing(): Promise<void> {
     await this.expectVisible(this.firstProductLink, "First product details link should be visible");
 
@@ -128,6 +142,7 @@ export class ProductPage extends BasePage {
     await this.expectUrlContains("/product/");
   }
 
+  // Clicks the Add to Cart button.
   async addToCart(): Promise<void> {
     await this.clickWhenReady(this.addToCartButton);
   }

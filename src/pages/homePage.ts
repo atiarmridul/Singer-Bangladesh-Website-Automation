@@ -45,6 +45,7 @@ export class HomePage extends BasePage {
   readonly productCards: Locator;
   readonly categoryLinks: Locator;
 
+  // Builds all homepage locators once, so tests can reuse the same named pieces.
   constructor(page: Page, baseUrl?: string) {
     super(page, baseUrl);
     // Selectors include fallback variants because the site has responsive/header variants.
@@ -57,24 +58,29 @@ export class HomePage extends BasePage {
     this.categoryLinks = this.selfHealingPrimary(categoryLinksLocator);
   }
 
+  // Opens the storefront homepage.
   async open(): Promise<void> {
     await this.goto("/");
   }
 
+  // Loads the homepage; this name matches the other page objects.
   async load(): Promise<void> {
     await this.open();
   }
 
+  // Checks the homepage has the title, header, and search box users need first.
   async assertLoaded(): Promise<void> {
     await expect(this.page).toHaveTitle(/Singer/i);
     await this.expectSelfHealingVisible(headerLocator, 10_000);
     await this.expectSelfHealingVisible(searchInputLocator, 10_000);
   }
 
+  // Checks that enough product cards showed up on the homepage.
   async assertHasProducts(minimum: number): Promise<void> {
     await this.expectCountGreaterThan(this.productCards, minimum - 1);
   }
 
+  // Collects category slugs from visible homepage category links.
   async getVisibleCategorySlugs(limit: number): Promise<string[]> {
     const slugs: string[] = [];
     const seen = new Set<string>();
@@ -95,6 +101,7 @@ export class HomePage extends BasePage {
     return slugs;
   }
 
+  // Searches for a product word and falls back to the matching category URL if the search box is readonly.
   async searchFor(keyword: string): Promise<void> {
     await this.expectSelfHealingVisible(searchInputLocator, 10_000);
     const input = await this.resolveSelfHealingLocator(searchInputLocator, 10_000);

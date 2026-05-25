@@ -67,12 +67,14 @@ export type SelectorDefinition = z.infer<typeof selectorSchema>;
 export type TestStep = z.infer<typeof stepSchema>;
 export type GeneratedTestCase = z.infer<typeof testCaseSchema>;
 
+// Reads one JSON definition file and checks that it matches the schema.
 export function parseTestCaseFile(filePath: string): GeneratedTestCase {
   const raw = fs.readFileSync(filePath, "utf8");
   const parsed = JSON.parse(raw);
   return testCaseSchema.parse(parsed);
 }
 
+// Lists definition files in a stable order so generated output is predictable.
 export function listDefinitionFiles(inputDir: string): string[] {
   if (!fs.existsSync(inputDir)) {
     throw new Error(`Definition directory not found: ${inputDir}`);
@@ -85,6 +87,7 @@ export function listDefinitionFiles(inputDir: string): string[] {
     .map((file) => path.join(inputDir, file));
 }
 
+// Turns an ID into a filename-safe slug.
 export function toSafeFileName(value: string): string {
   return value
     .toLowerCase()

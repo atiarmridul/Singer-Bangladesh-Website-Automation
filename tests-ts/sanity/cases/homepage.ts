@@ -2,6 +2,7 @@ import { expect, test } from "../../fixtures/singerTest";
 
 import { HomePage } from "../../../src/pages/homePage";
 
+// Groups homepage shell sanity checks.
 export function defineHomepageSanity(): void {
   // Purpose: verifies the homepage shell can load enough for a user to start browsing or searching.
   // Risk covered: blank page, missing header, or broken search entry point.
