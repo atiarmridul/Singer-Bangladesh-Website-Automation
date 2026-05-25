@@ -18,7 +18,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
 | Regression Tests        | 18         |
 | Visual Regression Tests | 2          |
 | Accessibility Tests     | 2          |
-| AI Generated Tests      | 1          |
+| AI Generated Tests      | 35         |
 
 ## Sanity Tests
 
@@ -522,14 +522,421 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
 
 ## AI Generated Tests
 
-### AI_SANITY_001 - Homepage - should load header and search controls
+### AI_001 - A11Y_001 Homepage - should not have critical axe violations
 
-- Source: `tests-ts/ai-generated/ai-sanity-001.generated.spec.ts`
-- Tags: `@ai`, `@smoke`, `@homepage`
-- Purpose: mirrors the hand-written smoke test that verifies the homepage shell can load enough for a user to start browsing or searching.
-- Risk covered: blank page, missing header, broken search entry point, or generated test drift from the canonical smoke flow.
+- Source: `tests-ts/ai-generated/a11y-001.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@a11y`
+- Purpose: scans the hydrated homepage for critical WCAG accessibility violations.
+- Risk covered: missing accessible names, invalid ARIA, contrast regressions, or keyboard-blocking markup.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the target UI element is visible.
+  3. Run the axe-core accessibility scan against the hydrated page.
+
+### REG_004 - Catalog - should open product details page from category listing
+
+- Source: `tests-ts/ai-generated/reg-004.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: proves that users can move from category browsing into a product details page.
+- Risk covered: listing links that render but no longer navigate to valid PDP routes.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_005 - Homepage - should show core content blocks
+
+- Source: `tests-ts/ai-generated/reg-005.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: confirms the homepage renders the core merchandising surface, not just a 200 response.
+- Risk covered: blank home layout, missing product blocks, or broken home page hydration.
 - Execution:
   1. Open the target page in the browser.
   2. Verify the page title matches the expected Singer title pattern.
   3. Verify the target UI element is visible.
   4. Verify the final assertion for this test case.
+
+### REG_007 - Product - should load details page successfully
+
+- Source: `tests-ts/ai-generated/reg-007.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: validates the PDP can load and expose a usable product title.
+- Risk covered: product route outage, blank PDP, or title selector drift.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_009 - Product - should load image gallery
+
+- Source: `tests-ts/ai-generated/reg-009.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: confirms the PDP media area has at least one renderable product image.
+- Risk covered: broken gallery selectors, missing image data, or failed image hydration.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+  6. Verify the final assertion for this test case.
+
+### REG_010 - Product - should display stock status indicator
+
+- Source: `tests-ts/ai-generated/reg-010.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: checks that PDP availability information is exposed to shoppers.
+- Risk covered: missing stock badge/text or changed stock indicator markup.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_011 - Product - should show add to cart button
+
+- Source: `tests-ts/ai-generated/reg-011.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: verifies the primary buying action is visible before cart-specific tests run.
+- Risk covered: hidden/renamed add-to-cart button or disabled PDP commerce actions.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_012 - Product - should allow checking reviews section visibility
+
+- Source: `tests-ts/ai-generated/reg-012.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: records whether reviews are present without failing products that have no reviews.
+- Risk covered: reviews section selector drift while keeping the check non-blocking.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_013 - Product - should allow reading product description
+
+- Source: `tests-ts/ai-generated/reg-013.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: checks description extraction for reporting and future content assertions.
+- Risk covered: changed description markup or empty content payloads.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_014 - Product - should allow reading brand information
+
+- Source: `tests-ts/ai-generated/reg-014.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: checks brand extraction without forcing all products to display brand copy.
+- Risk covered: changed brand markup or missing brand data.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_015 - Product - should display price
+
+- Source: `tests-ts/ai-generated/reg-015.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: validates that price is visible in the shopper-facing PDP content.
+- Risk covered: missing price, pricing component failure, or currency selector drift.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_017 - Product - should use matching product URL slug
+
+- Source: `tests-ts/ai-generated/reg-017.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: ensures the clicked listing href and final PDP URL resolve to the same product slug.
+- Risk covered: redirects to a different product or malformed product URL structure.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### REG_018 - Product - should display a non-empty title
+
+- Source: `tests-ts/ai-generated/reg-018.generated.spec.ts`
+- Tags: `@ai`, `@catalog`
+- Purpose: keeps title extraction explicit for reports and future title-format assertions.
+- Risk covered: empty product title or heading selector drift.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### SANITY_001 - Homepage - should load header and search controls
+
+- Source: `tests-ts/ai-generated/sanity-001.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@smoke`, `@homepage`
+- Purpose: verifies the homepage shell can load enough for a user to start browsing or searching.
+- Risk covered: blank page, missing header, or broken search entry point.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the page title matches the expected Singer title pattern.
+  3. Verify the target UI element is visible.
+  4. Verify the final assertion for this test case.
+
+### SANITY_002 - Category - should open live top-level category page
+
+- Source: `tests-ts/ai-generated/sanity-002.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@category`
+- Purpose: checks a live top-level category route selected from API-backed test data.
+- Risk covered: stale hardcoded categories, category route regression, empty body, or category page not rendering.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### AI_016 - SANITY_003_SHOULD_RETURN_PRODUCTS_FOR_REFRIGERATOR Search - should return products for
+
+- Source: `tests-ts/ai-generated/sanity-003-should-return-products-for-refrigerator.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@search`
+- Purpose: run the same search journey against representative high-traffic product keywords.
+- Risk covered: search form submission, search routing, and empty result listing regressions.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### AI_017 - SANITY_003_SHOULD_RETURN_PRODUCTS_FOR_WASHING_MACHINE Search - should return products for
+
+- Source: `tests-ts/ai-generated/sanity-003-should-return-products-for-washing-machine.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@search`
+- Purpose: run the same search journey against representative high-traffic product keywords.
+- Risk covered: search form submission, search routing, and empty result listing regressions.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### SANITY_003 - Search - should return products for
+
+- Source: `tests-ts/ai-generated/sanity-003.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@search`
+- Purpose: run the same search journey against representative high-traffic product keywords.
+- Risk covered: search form submission, search routing, and empty result listing regressions.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### SANITY_004 - Listing - should show products for washing machine category
+
+- Source: `tests-ts/ai-generated/sanity-004.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@listing`
+- Purpose: validates that a known listing page renders real products.
+- Risk covered: broken category listing, no product cards, or product-link selector drift.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### SANITY_005 - Product - should open product details for a live in-stock product
+
+- Source: `tests-ts/ai-generated/sanity-005.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@product`
+- Purpose: opens a live in-stock product from API-backed test data.
+- Risk covered: stale hardcoded products, out-of-stock test data, missing PDP title/price, or missing primary action.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+
+### SANITY_006 - Cart - should add live in-stock product to cart
+
+- Source: `tests-ts/ai-generated/sanity-006.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@cart`
+- Purpose: covers the main guest shopping path using a live in-stock product from API-backed test data.
+- Risk covered: stale hardcoded products, disabled add-to-cart action, cart counter failure, or cart item not persisting.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+  6. Get By Role. on page..
+  7. Verify the final assertion for this test case.
+
+### SANITY_007 - Cart - should open cart page directly
+
+- Source: `tests-ts/ai-generated/sanity-007.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@cart`
+- Purpose: verifies cart page routing independently from the add-to-cart workflow.
+- Risk covered: broken cart route, blank cart page, or unrecognized empty-cart UI.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the final assertion for this test case.
+
+### SANITY_008 - Auth - should open login modal from homepage
+
+- Source: `tests-ts/ai-generated/sanity-008.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@auth`
+- Purpose: confirms the unauthenticated login entry point is reachable from the homepage.
+- Risk covered: missing login button, blocked click, or login panel copy not rendering.
+- Execution:
+  1. Open the target page in the browser.
+  2. Dismiss Blocking Modals..
+  3. Locate the target element on the page.
+  4. Verify the current URL or value contains the expected slug.
+
+### SANITY_009 - Campaign - should open campaign page with EMI content
+
+- Source: `tests-ts/ai-generated/sanity-009.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@campaign`
+- Purpose: checks that the promotional campaign route loads visible campaign content.
+- Risk covered: campaign route outage, blank campaign page, or missing EMI promotion block.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the current URL or value contains the expected slug.
+
+### SANITY_010 - Footer - should navigate to terms and conditions
+
+- Source: `tests-ts/ai-generated/sanity-010.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@footer`
+- Purpose: validates a legal/footer navigation link that users commonly need after page load.
+- Risk covered: footer not rendering, link target drift, or modal overlay blocking footer clicks.
+- Execution:
+  1. Open the target page in the browser.
+  2. Dismiss Blocking Modals..
+  3. Locate the target element on the page.
+  4. Verify the browser URL matches the expected route pattern.
+
+### SANITY_011 - Homepage - should show category navigation links
+
+- Source: `tests-ts/ai-generated/sanity-011.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@homepage`
+- Purpose: verifies users can start category browsing from the homepage.
+- Risk covered: missing category navigation, hidden menu links, or selector drift in the browsing entry point.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the target UI element is visible.
+
+### SANITY_012 - Listing - should expose product detail links
+
+- Source: `tests-ts/ai-generated/sanity-012.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@listing`
+- Purpose: confirms listing cards expose navigable product-detail links.
+- Risk covered: product cards render visually but cannot take shoppers to PDPs.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Verify the final assertion for this test case.
+
+### SANITY_013 - Product - should show product images
+
+- Source: `tests-ts/ai-generated/sanity-013.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@product`
+- Purpose: validates the PDP media area renders for live API-backed product data.
+- Risk covered: broken product image payloads, gallery selector drift, or failed media hydration.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+  4. Dismiss Blocking Modals..
+  5. Click Or Navigate..
+  6. Verify the final assertion for this test case.
+
+### SANITY_014 - Homepage - should render footer
+
+- Source: `tests-ts/ai-generated/sanity-014.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@homepage`
+- Purpose: checks that global footer content is present after homepage load.
+- Risk covered: broken layout shell, missing footer render, or hydration hiding footer content.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the target UI element is visible.
+
+### SANITY_015 - Category - should load live category listing shell
+
+- Source: `tests-ts/ai-generated/sanity-015.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@category`
+- Purpose: validates that a live category with products reaches a hydrated listing surface.
+- Risk covered: category page shell loads but listing content never becomes available for current catalog data.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### SANITY_016 - Auth - should show login entry point on homepage
+
+- Source: `tests-ts/ai-generated/sanity-016.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@auth`
+- Purpose: verifies the login entry point is visible before opening the modal.
+- Risk covered: missing unauthenticated account action or header auth selector drift.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the target UI element is visible.
+
+### SANITY_017 - Campaign - should render campaign page body
+
+- Source: `tests-ts/ai-generated/sanity-017.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@campaign`
+- Purpose: verifies the campaign route renders a visible page body independent of specific promo copy.
+- Risk covered: blank campaign route, failed page shell, or blocked content render.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the browser URL matches the expected route pattern.
+  3. Verify the target UI element is visible.
+
+### SANITY_018 - Footer - should show terms and conditions link
+
+- Source: `tests-ts/ai-generated/sanity-018.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@footer`
+- Purpose: confirms the legal footer link is present before exercising navigation.
+- Risk covered: missing footer link, changed href, or footer content failing to render.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the target UI element is visible.
+
+### SANITY_019 - FAQ - should filter questions by search keyword
+
+- Source: `tests-ts/ai-generated/sanity-019.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@support`
+- Purpose: validates FAQ client-side search so customers can quickly find self-service answers.
+- Risk covered: FAQ search input missing, filter state broken, or expected help content not rendered.
+- Execution:
+  1. Open the target page in the browser.
+  2. Locate the target element on the page.
+  3. Verify the current URL or value contains the expected slug.
+
+### SANITY_020 - Store locator - should show store contact actions
+
+- Source: `tests-ts/ai-generated/sanity-020.generated.spec.ts`
+- Tags: `@ai`, `@catalog`, `@sanity`, `@support`
+- Purpose: confirms the store locator renders actionable contact and direction options.
+- Risk covered: store locator data missing, contact links absent, or service-location route broken.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the page title matches the expected Singer title pattern.
+  3. Verify the target UI element is visible.
+  4. Verify the current URL or value contains the expected slug.

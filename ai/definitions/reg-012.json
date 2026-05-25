@@ -1,0 +1,57 @@
+{
+  "id": "REG_012",
+  "title": "Product - should allow checking reviews section visibility",
+  "tags": ["@ai", "@catalog"],
+  "purpose": "records whether reviews are present without failing products that have no reviews.",
+  "risk": "reviews section selector drift while keeping the check non-blocking.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/category/television?category=television&page=1&limit=12"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/category/television"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    },
+    {
+      "action": "click",
+      "selector": {
+        "description": "First product details link",
+        "css": ".product-card a[href*='/product/'], a[aria-label='Go to product details'][href^='/product/'], a[href*='/product/']",
+        "candidates": [
+          ".product-card a[href*='/product/']",
+          "a[aria-label='Go to product details'][href^='/product/']",
+          "a[href*='/product/']"
+        ]
+      }
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/product/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product details title",
+        "css": "main h1:visible",
+        "candidates": ["main h1", "h1:visible"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Main page content",
+        "css": "main, body",
+        "candidates": ["main", "body"]
+      }
+    }
+  ]
+}

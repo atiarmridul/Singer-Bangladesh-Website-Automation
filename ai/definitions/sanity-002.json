@@ -1,0 +1,25 @@
+{
+  "id": "SANITY_002",
+  "title": "Category - should open live top-level category page",
+  "tags": ["@ai", "@catalog", "@sanity", "@category"],
+  "purpose": "checks a live top-level category route selected from API-backed test data.",
+  "risk": "stale hardcoded categories, category route regression, empty body, or category page not rendering.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/category/television?category=television&page=1&limit=12"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/category/television"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    }
+  ]
+}

@@ -53,6 +53,7 @@ Use different commands depending on the amount of confidence needed:
 | Situation                 | Command                                  |
 | ------------------------- | ---------------------------------------- |
 | Quick local confidence    | `npm run test:tag:smoke`                 |
+| Rebuild definitions       | `npm run ai:definitions:from-catalog`    |
 | Validate generated specs  | `npm run test:ai-generated`              |
 | Before pushing code       | `npm run quality && npm run test:sanity` |
 | Deeper scheduled coverage | `npm run test:regression`                |

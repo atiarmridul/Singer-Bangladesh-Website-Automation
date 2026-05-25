@@ -94,12 +94,14 @@ can overwrite hand-written sections.
 ## AI-Assisted Testing
 
 ```bash
+npm run ai:definitions:from-catalog
 npm run ai:generate-tests
 npm run test:ai-generated
 npm run ai:repair-selectors -- --failure=test-results/<case>/error-context.md
 ```
 
-AI definitions live in `ai/definitions/`, generated specs live in `tests-ts/ai-generated/`, and the detailed workflow is
+Use `ai:definitions:from-catalog` to convert supported cases from `docs/test-cases.md` into JSON definitions. AI
+definitions live in `ai/definitions/`, generated specs live in `tests-ts/ai-generated/`, and the detailed workflow is
 documented in [ai-assisted-workflow.md](ai-assisted-workflow.md).
 
 ## Debugging

@@ -1,0 +1,31 @@
+{
+  "id": "SANITY_019",
+  "title": "FAQ - should filter questions by search keyword",
+  "tags": ["@ai", "@catalog", "@sanity", "@support"],
+  "purpose": "validates FAQ client-side search so customers can quickly find self-service answers.",
+  "risk": "FAQ search input missing, filter state broken, or expected help content not rendered.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/faq"
+    },
+    {
+      "action": "fill",
+      "selector": {
+        "description": "FAQ search input",
+        "css": "main input[placeholder='Search topics, questions...']:visible",
+        "candidates": ["main input[placeholder='Search topics, questions...']", "main input[placeholder*='Search']"]
+      },
+      "value": "payment"
+    },
+    {
+      "action": "expectText",
+      "selector": {
+        "description": "FAQ payment result list",
+        "css": "main",
+        "candidates": ["main:has-text('What payment methods are accepted?')", "main:has-text('payment methods')"]
+      },
+      "text": "Related Search"
+    }
+  ]
+}

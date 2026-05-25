@@ -1,9 +1,9 @@
 {
-  "id": "AI_SANITY_001",
+  "id": "SANITY_001",
   "title": "Homepage - should load header and search controls",
-  "tags": ["@ai", "@smoke", "@homepage"],
-  "purpose": "mirrors the hand-written smoke test that verifies the homepage shell can load enough for a user to start browsing or searching.",
-  "risk": "blank page, missing header, broken search entry point, or generated test drift from the canonical smoke flow.",
+  "tags": ["@ai", "@catalog", "@sanity", "@smoke", "@homepage"],
+  "purpose": "verifies the homepage shell can load enough for a user to start browsing or searching.",
+  "risk": "blank page, missing header, or broken search entry point.",
   "steps": [
     {
       "action": "goto",
@@ -26,7 +26,12 @@
       "selector": {
         "description": "Homepage search input",
         "css": "input[name='search'], input[placeholder*='Search'], input[type='search']",
-        "candidates": ["input[name='search']", "input[placeholder*='Search']", "input[type='search']"]
+        "candidates": [
+          "input[name='search']",
+          "input[placeholder*='Search']",
+          "input[type='search']",
+          "[role='searchbox']"
+        ]
       }
     }
   ]

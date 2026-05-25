@@ -1,0 +1,21 @@
+{
+  "id": "SANITY_016",
+  "title": "Auth - should show login entry point on homepage",
+  "tags": ["@ai", "@catalog", "@sanity", "@auth"],
+  "purpose": "verifies the login entry point is visible before opening the modal.",
+  "risk": "missing unauthenticated account action or header auth selector drift.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Login button",
+        "css": "button:visible:has-text('Log In')",
+        "candidates": ["button:visible:has-text('Log In')", "button:visible:has-text('Login')", "header button:visible"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "SANITY_014",
+  "title": "Homepage - should render footer",
+  "tags": ["@ai", "@catalog", "@sanity", "@homepage"],
+  "purpose": "checks that global footer content is present after homepage load.",
+  "risk": "broken layout shell, missing footer render, or hydration hiding footer content.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Footer",
+        "css": "footer:visible, [class*='footer']:visible",
+        "candidates": ["footer:visible", "[class*='footer']:visible"]
+      }
+    }
+  ]
+}

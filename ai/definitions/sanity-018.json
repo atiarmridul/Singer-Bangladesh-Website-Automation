@@ -1,0 +1,21 @@
+{
+  "id": "SANITY_018",
+  "title": "Footer - should show terms and conditions link",
+  "tags": ["@ai", "@catalog", "@sanity", "@footer"],
+  "purpose": "confirms the legal footer link is present before exercising navigation.",
+  "risk": "missing footer link, changed href, or footer content failing to render.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Terms and conditions footer link",
+        "css": "a[href='/terms-conditions'], a[href*='terms-conditions']",
+        "candidates": ["a[href='/terms-conditions']", "a[href*='terms-conditions']"]
+      }
+    }
+  ]
+}

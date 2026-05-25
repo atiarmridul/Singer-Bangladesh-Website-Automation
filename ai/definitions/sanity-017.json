@@ -1,0 +1,25 @@
+{
+  "id": "SANITY_017",
+  "title": "Campaign - should render campaign page body",
+  "tags": ["@ai", "@catalog", "@sanity", "@campaign"],
+  "purpose": "verifies the campaign route renders a visible page body independent of specific promo copy.",
+  "risk": "blank campaign route, failed page shell, or blocked content render.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/campaign"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "campaign"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Page body",
+        "css": "body",
+        "candidates": ["body", "main"]
+      }
+    }
+  ]
+}

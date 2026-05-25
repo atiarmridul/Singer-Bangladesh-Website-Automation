@@ -1,0 +1,25 @@
+{
+  "id": "SANITY_003_SHOULD_RETURN_PRODUCTS_FOR_REFRIGERATOR",
+  "title": "Search - should return products for 'refrigerator'",
+  "tags": ["@ai", "@catalog", "@sanity", "@search"],
+  "purpose": "run the same search journey against representative high-traffic product keywords.",
+  "risk": "search form submission, search routing, and empty result listing regressions.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/category/refrigerator?category=refrigerator&page=1&limit=12"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "refrigerator"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    }
+  ]
+}

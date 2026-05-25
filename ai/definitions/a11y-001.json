@@ -1,0 +1,24 @@
+{
+  "id": "A11Y_001",
+  "title": "Homepage - should not have critical axe violations",
+  "tags": ["@ai", "@catalog", "@a11y"],
+  "purpose": "scans the hydrated homepage for critical WCAG accessibility violations.",
+  "risk": "missing accessible names, invalid ARIA, contrast regressions, or keyboard-blocking markup.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage header",
+        "css": "section.shadow-main-menu, .desktop-header-menu",
+        "candidates": ["section.shadow-main-menu", ".desktop-header-menu", "header", "[role='banner']"]
+      }
+    },
+    {
+      "action": "checkA11y"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "SANITY_008",
+  "title": "Auth - should open login modal from homepage",
+  "tags": ["@ai", "@catalog", "@sanity", "@auth"],
+  "purpose": "confirms the unauthenticated login entry point is reachable from the homepage.",
+  "risk": "missing login button, blocked click, or login panel copy not rendering.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "click",
+      "selector": {
+        "description": "Login button",
+        "css": "button:visible:has-text('Log In')",
+        "candidates": ["button:visible:has-text('Log In')", "button:visible:has-text('Login')", "header button:visible"]
+      }
+    },
+    {
+      "action": "expectText",
+      "selector": {
+        "description": "Login panel welcome text",
+        "text": "Welcome to Singer",
+        "candidates": ["text=Welcome to Singer", "[class*='modal']:has-text('Welcome to Singer')"]
+      },
+      "text": "Welcome to Singer"
+    }
+  ]
+}

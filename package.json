@@ -28,6 +28,7 @@
     "quality": "npm run typecheck && npm run lint && npm run format:check",
     "docs:update": "node scripts/update-docs.mjs",
     "docs:test-cases": "node scripts/update-test-cases.mjs",
+    "ai:definitions:from-catalog": "node scripts/convert-test-cases-to-ai-definitions.mjs",
     "ai:generate-tests": "ts-node ai/generate-test.ts",
     "ai:repair-selectors": "ts-node ai/repair-selectors.ts",
     "test:ai-generated": "playwright test tests-ts/ai-generated --project=chromium",

@@ -1,0 +1,21 @@
+{
+  "id": "SANITY_011",
+  "title": "Homepage - should show category navigation links",
+  "tags": ["@ai", "@catalog", "@sanity", "@homepage"],
+  "purpose": "verifies users can start category browsing from the homepage.",
+  "risk": "missing category navigation, hidden menu links, or selector drift in the browsing entry point.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage category navigation",
+        "css": "a[href*='/category/']",
+        "candidates": ["a[href*='/category/']", "section:has-text('What are you looking for?') a"]
+      }
+    }
+  ]
+}

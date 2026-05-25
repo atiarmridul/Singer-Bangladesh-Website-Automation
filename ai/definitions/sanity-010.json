@@ -1,0 +1,25 @@
+{
+  "id": "SANITY_010",
+  "title": "Footer - should navigate to terms and conditions",
+  "tags": ["@ai", "@catalog", "@sanity", "@footer"],
+  "purpose": "validates a legal/footer navigation link that users commonly need after page load.",
+  "risk": "footer not rendering, link target drift, or modal overlay blocking footer clicks.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "click",
+      "selector": {
+        "description": "Terms and conditions footer link",
+        "css": "a[href='/terms-conditions'], a[href*='terms-conditions']",
+        "candidates": ["a[href='/terms-conditions']", "a[href*='terms-conditions']"]
+      }
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "terms-conditions"
+    }
+  ]
+}

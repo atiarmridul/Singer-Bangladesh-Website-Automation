@@ -1,0 +1,25 @@
+{
+  "id": "SANITY_004",
+  "title": "Listing - should show products for washing machine category",
+  "tags": ["@ai", "@catalog", "@sanity", "@listing"],
+  "purpose": "validates that a known listing page renders real products.",
+  "risk": "broken category listing, no product cards, or product-link selector drift.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/category/washing-machine?category=washing-machine&page=1&limit=12"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/category/washing-machine"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    }
+  ]
+}

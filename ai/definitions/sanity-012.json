@@ -1,0 +1,37 @@
+{
+  "id": "SANITY_012",
+  "title": "Listing - should expose product detail links",
+  "tags": ["@ai", "@catalog", "@sanity", "@listing"],
+  "purpose": "confirms listing cards expose navigable product-detail links.",
+  "risk": "product cards render visually but cannot take shoppers to PDPs.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/category/washing-machine?category=washing-machine&page=1&limit=12"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/category/washing-machine"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "First product details link",
+        "css": ".product-card a[href*='/product/'], a[aria-label='Go to product details'][href^='/product/'], a[href*='/product/']",
+        "candidates": [
+          ".product-card a[href*='/product/']",
+          "a[aria-label='Go to product details'][href^='/product/']",
+          "a[href*='/product/']"
+        ]
+      }
+    }
+  ]
+}

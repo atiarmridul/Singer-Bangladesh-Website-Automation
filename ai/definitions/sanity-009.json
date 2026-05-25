@@ -1,0 +1,26 @@
+{
+  "id": "SANITY_009",
+  "title": "Campaign - should open campaign page with EMI content",
+  "tags": ["@ai", "@catalog", "@sanity", "@campaign"],
+  "purpose": "checks that the promotional campaign route loads visible campaign content.",
+  "risk": "campaign route outage, blank campaign page, or missing EMI promotion block.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/campaign"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "campaign"
+    },
+    {
+      "action": "expectText",
+      "selector": {
+        "description": "Page body",
+        "css": "body",
+        "candidates": ["body", "main"]
+      },
+      "text": "EMI"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "SANITY_020",
+  "title": "Store locator - should show store contact actions",
+  "tags": ["@ai", "@catalog", "@sanity", "@support"],
+  "purpose": "confirms the store locator renders actionable contact and direction options.",
+  "risk": "store locator data missing, contact links absent, or service-location route broken.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/store-locator"
+    },
+    {
+      "action": "expectTitle",
+      "pattern": "Store & Service Locations"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Store locator search input",
+        "css": "main input[placeholder='Search Here...']:visible",
+        "candidates": ["main input[placeholder='Search Here...']", "main input[placeholder*='Search']"]
+      }
+    },
+    {
+      "action": "expectText",
+      "selector": {
+        "description": "Store locator phone label",
+        "text": "Phone:",
+        "candidates": ["text=Phone:", "main:has-text('Phone:')"]
+      },
+      "text": "Phone:"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Store locator call action",
+        "css": "main a[href^='tel:']",
+        "candidates": ["main a[href^='tel:']"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Store locator directions action",
+        "css": "main a[href*='google.com/maps/dir']",
+        "candidates": ["main a[href*='google.com/maps/dir']", "main a[href*='maps']"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Store locator book now action",
+        "css": "main button:has-text('Book Now')",
+        "candidates": ["main button:has-text('Book Now')"]
+      }
+    }
+  ]
+}

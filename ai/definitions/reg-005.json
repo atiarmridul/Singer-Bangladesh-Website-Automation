@@ -1,0 +1,46 @@
+{
+  "id": "REG_005",
+  "title": "Homepage - should show core content blocks",
+  "tags": ["@ai", "@catalog"],
+  "purpose": "confirms the homepage renders the core merchandising surface, not just a 200 response.",
+  "risk": "blank home layout, missing product blocks, or broken home page hydration.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectTitle",
+      "pattern": "Singer"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage header",
+        "css": "section.shadow-main-menu, .desktop-header-menu",
+        "candidates": ["section.shadow-main-menu", ".desktop-header-menu", "header", "[role='banner']"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage search input",
+        "css": "input[name='search'], input[placeholder*='Search'], input[type='search']",
+        "candidates": [
+          "input[name='search']",
+          "input[placeholder*='Search']",
+          "input[type='search']",
+          "[role='searchbox']"
+        ]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Product cards or product links",
+        "css": ".product-card, a[href*='/product/']",
+        "candidates": [".product-card", "a[href*='/product/']", "main a[href*='/product/']"]
+      }
+    }
+  ]
+}

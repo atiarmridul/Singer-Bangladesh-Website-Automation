@@ -1,0 +1,32 @@
+{
+  "id": "SANITY_007",
+  "title": "Cart - should open cart page directly",
+  "tags": ["@ai", "@catalog", "@sanity", "@cart"],
+  "purpose": "verifies cart page routing independently from the add-to-cart workflow.",
+  "risk": "broken cart route, blank cart page, or unrecognized empty-cart UI.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/cart"
+    },
+    {
+      "action": "expectUrl",
+      "pattern": "/cart"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Cart page surface",
+        "css": ".cart.item, .cart.table-wrapper tbody tr, .cart-container .item-info, [class*='cart'], main, body",
+        "candidates": [
+          ".cart.item",
+          ".cart.table-wrapper tbody tr",
+          ".cart-container .item-info",
+          "[class*='cart']",
+          "main",
+          "body"
+        ]
+      }
+    }
+  ]
+}
