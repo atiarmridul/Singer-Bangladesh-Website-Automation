@@ -10,13 +10,16 @@ Singer_BD_Automation/
 ├── docs/                             # Supporting markdown documentation
 ├── environments/                     # Environment-specific runtime settings
 ├── scripts/                          # Utility scripts
+├── ai/                               # AI-assisted generation and selector repair
 ├── src/                              # Framework source code
 │   ├── api/                          # API support layer
 │   ├── mcp/                          # Local MCP server
 │   ├── pages/                        # Page Object Model files
 │   └── utils/                        # Shared utilities
 ├── tests-ts/                         # Playwright test code
+│   ├── ai-generated/                 # Generated specs from ai/definitions
 │   ├── data/                         # Test data sources
+│   ├── accessibility/                # axe-core and Lighthouse accessibility specs
 │   ├── fixtures/                     # Shared fixtures and global setup
 │   ├── regression/                   # Regression specs
 │   ├── sanity/                       # Sanity specs and case builders
@@ -29,18 +32,20 @@ Singer_BD_Automation/
 
 ## Layer Responsibilities
 
-| Layer        | Location                     | Responsibility                                         |
-| ------------ | ---------------------------- | ------------------------------------------------------ |
-| Specs        | `tests-ts/**/*.spec.ts`      | Suite entry points, grouping, and Playwright metadata  |
-| Cases        | `tests-ts/sanity/cases/*.ts` | Reusable sanity business flow and assertions           |
-| Fixtures     | `tests-ts/fixtures/*.ts`     | Shared Playwright setup, cleanup, and live test data   |
-| Visual specs | `tests-ts/visual/*.spec.ts`  | Screenshot baseline checks for critical UI components  |
-| Page objects | `src/pages/*.ts`             | Locators and reusable UI actions                       |
-| Base helpers | `src/pages/basePage.ts`      | Navigation, waits, modal handling, robust clicks       |
-| API client   | `src/api/client.ts`          | HTTP transport, retry, status validation, JSON parsing |
-| API agents   | `src/api/agents/*.ts`        | Domain-level API wrappers                              |
-| Config       | `src/config.ts`              | Environment loading and validation                     |
-| MCP          | `src/mcp/server.ts`          | Local MCP metadata and tooling surface                 |
+| Layer        | Location                      | Responsibility                                         |
+| ------------ | ----------------------------- | ------------------------------------------------------ |
+| Specs        | `tests-ts/**/*.spec.ts`       | Suite entry points, grouping, and Playwright metadata  |
+| AI workflow  | `ai/*.ts`                     | JSON-to-Playwright generation and selector repair      |
+| Cases        | `tests-ts/sanity/cases/*.ts`  | Reusable sanity business flow and assertions           |
+| Fixtures     | `tests-ts/fixtures/*.ts`      | Shared Playwright setup, cleanup, and live test data   |
+| Visual specs | `tests-ts/visual/*.spec.ts`   | Screenshot baseline checks for critical UI components  |
+| A11y specs   | `tests-ts/accessibility/*.ts` | axe-core and Lighthouse accessibility checks           |
+| Page objects | `src/pages/*.ts`              | Locators and reusable UI actions                       |
+| Base helpers | `src/pages/basePage.ts`       | Navigation, waits, modal handling, robust clicks       |
+| API client   | `src/api/client.ts`           | HTTP transport, retry, status validation, JSON parsing |
+| API agents   | `src/api/agents/*.ts`         | Domain-level API wrappers                              |
+| Config       | `src/config.ts`               | Environment loading and validation                     |
+| MCP          | `src/mcp/server.ts`           | Local MCP metadata and tooling surface                 |
 
 ## Adding A Sanity Test
 

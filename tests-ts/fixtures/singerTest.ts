@@ -35,6 +35,8 @@ async function tearDownPassedTest(page: Page): Promise<void> {
 }
 
 export const test = base.extend<SingerFixtures>({
+  // Playwright fixture callbacks must use object destructuring even when no upstream fixtures are consumed.
+  // eslint-disable-next-line no-empty-pattern
   dataFactory: async ({}, use) => {
     await use(createTestDataFactory());
   },

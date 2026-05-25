@@ -5,7 +5,16 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["node_modules/**", "dist/**", "playwright-report/**", "test-results/**", "coverage/**"]
+    ignores: [
+      "node_modules/**",
+      "dist/**",
+      "playwright-report/**",
+      "test-results/**",
+      // Generated reports contain bundled vendor JavaScript and should not participate in source linting.
+      "allure-results/**",
+      "allure-report/**",
+      "coverage/**"
+    ]
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

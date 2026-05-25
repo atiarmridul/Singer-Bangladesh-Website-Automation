@@ -15,6 +15,27 @@ flowchart TD
   Playwright --> Website["Singer Bangladesh website"]
 ```
 
+## Self-Healing Locator Flow
+
+Critical page objects can resolve locators through a resilience layer before failing a test.
+
+```mermaid
+flowchart TD
+  PageObject["Page object locator definition"] --> Primary["Primary selector"]
+  Primary --> Visible{"Visible?"}
+  Visible -->|Yes| Locator["Use locator"]
+  Visible -->|No| Fallbacks["Try ranked fallback selectors"]
+  Fallbacks --> FallbackVisible{"Fallback visible?"}
+  FallbackVisible -->|Yes| Locator
+  FallbackVisible -->|No| Similarity["DOM similarity scoring<br/>text + attributes + element type"]
+  Similarity --> Candidate["Recovered CSS path"]
+  Candidate --> Locator
+  Locator --> Assertion["Assertion or action"]
+```
+
+The default implementation lives in `BasePage` and is currently used by homepage header, search, and category
+navigation checks. It keeps recovery explicit and reviewable instead of silently changing committed selectors.
+
 ## Fixture Flow
 
 All tests import the shared fixture instead of importing directly from Playwright.
@@ -91,17 +112,49 @@ flowchart TD
   Hero --> Baselines
 ```
 
+## Accessibility Flow
+
+Accessibility checks combine page-level axe assertions with a Lighthouse accessibility audit.
+
+```mermaid
+flowchart TD
+  A11ySpec["tests-ts/accessibility/*.spec.ts"] --> SharedFixture["Singer fixture"]
+  SharedFixture --> HydratedPage["Hydrated storefront page"]
+  HydratedPage --> Axe["checkA11y(page)<br/>axe-core WCAG scan"]
+  A11ySpec --> Lighthouse["Lighthouse snapshot audit"]
+  Axe --> A11yReport["Attached violation report"]
+  Lighthouse --> ScoreGate["Accessibility score threshold"]
+```
+
+## AI Test Generation Flow
+
+Structured definitions can generate reviewable Playwright specs while keeping the framework fixture conventions intact.
+
+```mermaid
+flowchart LR
+  Definition["ai/definitions/*.json"] --> Parser["test-case-parser.ts<br/>zod validation"]
+  Parser --> Generator["generate-test.ts"]
+  Generator --> GeneratedSpec["tests-ts/ai-generated/*.spec.ts"]
+  GeneratedSpec --> Fixture["Singer fixture"]
+  FailureContext["Playwright failure context"] --> Repair["repair-selectors.ts"]
+  Repair --> SelectorHints["ranked selector candidates"]
+  SelectorHints --> Definition
+```
+
 ## Responsibility Map
 
-| Layer        | Location                          | Responsibility                                     |
-| ------------ | --------------------------------- | -------------------------------------------------- |
-| Specs        | `tests-ts/sanity/*.spec.ts`       | Suite entry points and grouping.                   |
-| Cases        | `tests-ts/sanity/cases/*.ts`      | Business test flow and assertions.                 |
-| Fixtures     | `tests-ts/fixtures/*.ts`          | Shared setup, cleanup, global checks, live data.   |
-| Visual Specs | `tests-ts/visual/*.spec.ts`       | Screenshot baselines for critical UI components.   |
-| Page Objects | `src/pages/*.ts`                  | Locators and reusable UI actions.                  |
-| Base Helpers | `src/pages/basePage.ts`           | Navigation, waits, modal handling, robust clicks.  |
-| API Client   | `src/api/client.ts`               | HTTP transport, timeout, retry, JSON parsing.      |
-| API Agents   | `src/api/agents/*.ts`             | Domain-specific API operations.                    |
-| Config       | `src/config.ts`                   | Environment loading and validation.                |
-| MCP          | `src/mcp/server.ts`               | Local MCP metadata and automation tooling surface. |
+| Layer              | Location                      | Responsibility                                         |
+| ------------------ | ----------------------------- | ------------------------------------------------------ |
+| Specs              | `tests-ts/sanity/*.spec.ts`   | Suite entry points and grouping.                       |
+| AI Workflow        | `ai/*.ts`                     | Generate specs and rank selector repair candidates.    |
+| Cases              | `tests-ts/sanity/cases/*.ts`  | Business test flow and assertions.                     |
+| Fixtures           | `tests-ts/fixtures/*.ts`      | Shared setup, cleanup, global checks, live data.       |
+| Locator Resilience | `src/pages/basePage.ts`       | Fallback selector and DOM-similarity locator recovery. |
+| Visual Specs       | `tests-ts/visual/*.spec.ts`   | Screenshot baselines for critical UI components.       |
+| A11y Specs         | `tests-ts/accessibility/*.ts` | axe-core and Lighthouse accessibility checks.          |
+| Page Objects       | `src/pages/*.ts`              | Locators and reusable UI actions.                      |
+| Base Helpers       | `src/pages/basePage.ts`       | Navigation, waits, modal handling, robust clicks.      |
+| API Client         | `src/api/client.ts`           | HTTP transport, timeout, retry, JSON parsing.          |
+| API Agents         | `src/api/agents/*.ts`         | Domain-specific API operations.                        |
+| Config             | `src/config.ts`               | Environment loading and validation.                    |
+| MCP                | `src/mcp/server.ts`           | Local MCP metadata and automation tooling surface.     |

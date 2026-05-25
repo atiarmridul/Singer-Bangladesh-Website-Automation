@@ -30,39 +30,44 @@ npm run test:tag:smoke
 | Stack     | Playwright Test, TypeScript, Node.js, npm                                                     |
 | Pattern   | Page Object Model with reusable case builders                                                 |
 | Coverage  | Homepage, categories, search, listing, product details, cart, auth, campaign, footer, support |
-| Execution | Chromium-focused CI, tagged sanity tests, regression tests, visual tests                      |
+| Execution | Chromium-focused CI, tagged sanity tests, regression, visual, and accessibility tests         |
 | Reporting | Playwright HTML, JUnit XML, Allure results, Allure HTML                                       |
 | Quality   | TypeScript strict mode, ESLint, Prettier, Husky, lint-staged                                  |
+| AI Flow   | JSON test definitions, generated Playwright specs, selector repair assistance                 |
 
 ## Core Commands
 
-| Goal                  | Command                       |
-| --------------------- | ----------------------------- |
-| Run smoke sanity      | `npm run test:tag:smoke`      |
-| Run full sanity suite | `npm run test:sanity`         |
-| Run module specs      | `npm run test:sanity:modules` |
-| Run regression suite  | `npm run test:regression`     |
-| Run visual checks     | `npm run test:visual`         |
-| Update test catalog   | `npm run docs:test-cases`     |
-| Run quality gate      | `npm run quality`             |
+| Goal                   | Command                       |
+| ---------------------- | ----------------------------- |
+| Run smoke sanity       | `npm run test:tag:smoke`      |
+| Run full sanity suite  | `npm run test:sanity`         |
+| Run module specs       | `npm run test:sanity:modules` |
+| Run regression suite   | `npm run test:regression`     |
+| Run visual checks      | `npm run test:visual`         |
+| Run accessibility      | `npm run test:a11y`           |
+| Generate AI specs      | `npm run ai:generate-tests`   |
+| Run AI-generated specs | `npm run test:ai-generated`   |
+| Update test catalog    | `npm run docs:test-cases`     |
+| Run quality gate       | `npm run quality`             |
 
 See [docs/commands.md](docs/commands.md) for the full command reference.
 
 ## Documentation Map
 
-| Need                         | Document                                               |
-| ---------------------------- | ------------------------------------------------------ |
-| Commands, tags, debugging    | [docs/commands.md](docs/commands.md)                   |
-| Test case list and execution | [docs/test-cases.md](docs/test-cases.md)               |
-| Architecture diagrams        | [docs/architecture.md](docs/architecture.md)           |
-| Project structure and layers | [docs/project-structure.md](docs/project-structure.md) |
-| Environment switching        | [docs/environments.md](docs/environments.md)           |
-| Reports and artifacts        | [docs/reports.md](docs/reports.md)                     |
-| CI workflows                 | [docs/ci.md](docs/ci.md)                               |
-| MCP server                   | [docs/mcp.md](docs/mcp.md)                             |
-| Agent handoff guide          | [agent.md](agent.md)                                   |
-| Agent progress history       | [docs/AGENT_PROGRESS.md](docs/AGENT_PROGRESS.md)       |
-| Full imported walkthrough    | [docs/walkthrough.md](docs/walkthrough.md)             |
+| Need                         | Document                                                     |
+| ---------------------------- | ------------------------------------------------------------ |
+| Commands, tags, debugging    | [docs/commands.md](docs/commands.md)                         |
+| Test case list and execution | [docs/test-cases.md](docs/test-cases.md)                     |
+| Architecture diagrams        | [docs/architecture.md](docs/architecture.md)                 |
+| Project structure and layers | [docs/project-structure.md](docs/project-structure.md)       |
+| Environment switching        | [docs/environments.md](docs/environments.md)                 |
+| Reports and artifacts        | [docs/reports.md](docs/reports.md)                           |
+| CI workflows                 | [docs/ci.md](docs/ci.md)                                     |
+| AI-assisted test workflow    | [docs/ai-assisted-workflow.md](docs/ai-assisted-workflow.md) |
+| MCP server                   | [docs/mcp.md](docs/mcp.md)                                   |
+| Agent handoff guide          | [agent.md](agent.md)                                         |
+| Agent progress history       | [docs/AGENT_PROGRESS.md](docs/AGENT_PROGRESS.md)             |
+| Full imported walkthrough    | [docs/walkthrough.md](docs/walkthrough.md)                   |
 
 ## Key Features
 
@@ -72,9 +77,62 @@ See [docs/commands.md](docs/commands.md) for the full command reference.
 - API-backed live product data through `CatalogApiAgent` and `dataFactory`.
 - Environment validation through Playwright global setup.
 - Parallel execution with CI worker control and serial cart coverage where state is shared.
+- Self-healing locator strategy with fallback selectors, DOM-similarity recovery, and retry resolution.
+- Accessibility checks with axe-core assertions and Lighthouse audit coverage.
+- AI-assisted JSON-to-Playwright generation with selector repair scoring.
 - Visual regression baselines for the homepage header and hero.
 - GitHub Actions for sanity checks and scheduled regression checks.
 - Local stdio MCP server exposing project metadata and npm script tooling.
+
+## AI-Assisted Automation Workflow
+
+This project includes experimental AI-assisted automation engineering workflows designed to reduce repetitive test
+implementation and improve framework scalability.
+
+### Features
+
+- Structured JSON-driven test definitions
+- Automated Playwright spec generation
+- Reusable automation scaffolding
+- Selector repair and resilience experimentation
+- Test-case parsing utilities
+- AI-assisted framework acceleration workflows
+
+AI tools were used for framework scaffolding, reusable pattern generation, architecture refinement, documentation
+generation, debugging assistance, and CI workflow creation. Human engineering judgment was used for framework design
+decisions, automation strategy, maintainability validation, flaky test prevention, and test architecture review.
+
+### Example Structure
+
+```text
+ai/
+├── definitions/
+│   └── homepage-smoke.json
+├── generate-test.ts
+├── repair-selectors.ts
+└── test-case-parser.ts
+```
+
+### Example Definition
+
+```json
+{
+  "feature": "homepage smoke",
+  "steps": ["open homepage", "verify hero banner", "verify category visibility", "verify footer links"]
+}
+```
+
+### Generated Outcome
+
+```ts
+test("Homepage Smoke", async ({ page }) => {
+  await page.goto("/");
+  await expect(home.heroBanner).toBeVisible();
+});
+```
+
+See [docs/ai-assisted-workflow.md](docs/ai-assisted-workflow.md) for the executable JSON schema, fast feedback strategy,
+and day-to-day usage workflow.
 
 ## Repository Shape
 
@@ -84,9 +142,11 @@ src/
   pages/        Page Object Model layer
   mcp/          Local MCP server
 tests-ts/
+  ai-generated/ Generated specs from ai/definitions
   fixtures/     Playwright fixtures, global setup, data factory
   sanity/       Sanity suite and reusable case builders
   regression/   API/UI regression coverage
+  accessibility/ axe-core and Lighthouse accessibility checks
   visual/       Screenshot baseline tests
 docs/           Detailed project documentation
 ```

@@ -2,6 +2,19 @@ import { expect, Locator, Page, Response } from "@playwright/test";
 
 import { PageLoadError } from "../exceptions";
 
+export interface SelfHealingLocatorDefinition {
+  name: string;
+  primary: string;
+  fallbacks?: string[];
+  textHints?: string[];
+  attributeHints?: Record<string, string[]>;
+}
+
+type SelectorCandidate = {
+  selector: string;
+  source: "primary" | "fallback" | "dom-similarity";
+};
+
 // Shared base class for all Page Object Model classes.
 export abstract class BasePage {
   protected constructor(
@@ -35,6 +48,140 @@ export abstract class BasePage {
     throw new Error(`Expected one selector to become visible: ${selectors.join(", ")}`);
   }
 
+  protected selfHealingPrimary(definition: SelfHealingLocatorDefinition): Locator {
+    return this.byCss(definition.primary);
+  }
+
+  protected async resolveSelfHealingLocator(
+    definition: SelfHealingLocatorDefinition,
+    timeout = 5_000
+  ): Promise<Locator> {
+    return this.byCss(await this.resolveSelfHealingSelector(definition, timeout)).first();
+  }
+
+  protected async resolveSelfHealingSelector(
+    definition: SelfHealingLocatorDefinition,
+    timeout = 5_000
+  ): Promise<string> {
+    const deadline = Date.now() + timeout;
+    const selectors = [definition.primary, ...(definition.fallbacks ?? [])];
+
+    while (Date.now() <= deadline) {
+      for (const selector of selectors) {
+        const locator = this.byCss(selector).first();
+        if (await locator.isVisible().catch(() => false)) {
+          return selector;
+        }
+      }
+
+      const similar = await this.findSimilarDomCandidate(definition).catch(() => null);
+      if (similar) {
+        return similar.selector;
+      }
+
+      await this.page.waitForTimeout(250);
+    }
+
+    throw new Error(`Unable to resolve self-healing locator '${definition.name}'. Tried: ${selectors.join(", ")}`);
+  }
+
+  async expectSelfHealingVisible(definition: SelfHealingLocatorDefinition, timeout = 5_000): Promise<void> {
+    const locator = await this.resolveSelfHealingLocator(definition, timeout);
+    await this.expectVisible(locator, `${definition.name} should be visible`);
+  }
+
+  async clickSelfHealing(definition: SelfHealingLocatorDefinition, timeout = 5_000): Promise<void> {
+    const locator = await this.resolveSelfHealingLocator(definition, timeout);
+    await this.clickWhenReady(locator);
+  }
+
+  private async findSimilarDomCandidate(definition: SelfHealingLocatorDefinition): Promise<SelectorCandidate | null> {
+    const candidate = await this.page.evaluate(
+      (input) => {
+        const textHints = input.textHints.map((value) => value.toLowerCase());
+        const attributeHints = input.attributeHints;
+        const visibleElements = Array.from(document.querySelectorAll<HTMLElement>("body *")).filter((element) =>
+          element.checkVisibility()
+        );
+
+        function cssPath(element: HTMLElement): string {
+          if (element.id) {
+            return `#${CSS.escape(element.id)}`;
+          }
+
+          const parts: string[] = [];
+          let current: HTMLElement | null = element;
+
+          while (current && current.tagName.toLowerCase() !== "html") {
+            const tag = current.tagName.toLowerCase();
+            const parent: HTMLElement | null = current.parentElement;
+            if (!parent) {
+              parts.unshift(tag);
+              break;
+            }
+
+            const sameTagSiblings = Array.from(parent.children as HTMLCollectionOf<HTMLElement>).filter(
+              (sibling) => sibling.tagName.toLowerCase() === tag
+            );
+            const index = sameTagSiblings.indexOf(current) + 1;
+            parts.unshift(sameTagSiblings.length > 1 ? `${tag}:nth-of-type(${index})` : tag);
+            current = parent;
+          }
+
+          return parts.join(" > ");
+        }
+
+        function scoreElement(element: HTMLElement): number {
+          const searchableText = [
+            element.innerText,
+            element.getAttribute("aria-label"),
+            element.getAttribute("placeholder"),
+            element.getAttribute("name"),
+            element.getAttribute("href"),
+            element.id,
+            element.className
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+          let score = 0;
+          for (const hint of textHints) {
+            if (hint && searchableText.includes(hint)) {
+              score += 3;
+            }
+          }
+
+          for (const [attribute, values] of Object.entries(attributeHints)) {
+            const actual = element.getAttribute(attribute)?.toLowerCase() ?? "";
+            for (const value of values) {
+              if (value && actual.includes(value.toLowerCase())) {
+                score += 5;
+              }
+            }
+          }
+
+          if (["A", "BUTTON", "INPUT"].includes(element.tagName)) {
+            score += 1;
+          }
+
+          return score;
+        }
+
+        return visibleElements
+          .map((element) => ({ selector: cssPath(element), score: scoreElement(element) }))
+          .filter((item) => item.score >= 5)
+          .sort((left, right) => right.score - left.score)[0];
+      },
+      {
+        textHints: definition.textHints ?? [],
+        attributeHints: definition.attributeHints ?? {}
+      }
+    );
+
+    return candidate ? { selector: candidate.selector, source: "dom-similarity" } : null;
+  }
+
   async goto(pathname: string): Promise<void> {
     const normalizedPath = pathname.startsWith("/") || /^https?:\/\//i.test(pathname) ? pathname : `/${pathname}`;
     const target =
@@ -61,10 +208,9 @@ export abstract class BasePage {
 
   async waitForNetworkResponse(urlPattern: string, timeout = 15_000): Promise<Response> {
     // Use this before actions that trigger API hydration so tests can wait on a domain signal instead of sleeping.
-    return await this.page.waitForResponse(
-      (response) => response.url().includes(urlPattern) && response.ok(),
-      { timeout }
-    );
+    return await this.page.waitForResponse((response) => response.url().includes(urlPattern) && response.ok(), {
+      timeout
+    });
   }
 
   async dismissBlockingModals(): Promise<void> {

@@ -11,5 +11,5 @@
     "types": ["node", "@playwright/test"],
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "tests-ts/**/*.ts", "playwright.config.ts"]
+  "include": ["ai/**/*.ts", "src/**/*.ts", "tests-ts/**/*.ts", "playwright.config.ts"]
 }

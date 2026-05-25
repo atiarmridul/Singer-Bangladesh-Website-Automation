@@ -17,8 +17,11 @@ npx playwright install
 | Full sanity suite      | `npm run test:sanity`         |
 | Standalone modules     | `npm run test:sanity:modules` |
 | Regression suite       | `npm run test:regression`     |
+| Accessibility suite    | `npm run test:a11y`           |
 | Visual regression      | `npm run test:visual`         |
 | Update visual baseline | `npm run test:visual:update`  |
+| Generate AI specs      | `npm run ai:generate-tests`   |
+| AI-generated specs     | `npm run test:ai-generated`   |
 | Headed mode            | `npm run test:headed`         |
 | Playwright UI mode     | `npm run test:ui`             |
 
@@ -87,6 +90,17 @@ Run this after adding, removing, renaming, or materially changing tests. The gen
 
 Avoid `npm run docs:update` unless you intend to regenerate `README.md` and `docs/agent.md`; that generator is broad and
 can overwrite hand-written sections.
+
+## AI-Assisted Testing
+
+```bash
+npm run ai:generate-tests
+npm run test:ai-generated
+npm run ai:repair-selectors -- --failure=test-results/<case>/error-context.md
+```
+
+AI definitions live in `ai/definitions/`, generated specs live in `tests-ts/ai-generated/`, and the detailed workflow is
+documented in [ai-assisted-workflow.md](ai-assisted-workflow.md).
 
 ## Debugging
 

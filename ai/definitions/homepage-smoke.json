@@ -1,0 +1,33 @@
+{
+  "id": "AI_SANITY_001",
+  "title": "Homepage - should load header and search controls",
+  "tags": ["@ai", "@smoke", "@homepage"],
+  "purpose": "mirrors the hand-written smoke test that verifies the homepage shell can load enough for a user to start browsing or searching.",
+  "risk": "blank page, missing header, broken search entry point, or generated test drift from the canonical smoke flow.",
+  "steps": [
+    {
+      "action": "goto",
+      "path": "/"
+    },
+    {
+      "action": "expectTitle",
+      "pattern": "Singer"
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage header",
+        "css": "section.shadow-main-menu, .desktop-header-menu",
+        "candidates": ["section.shadow-main-menu", ".desktop-header-menu", "header", "[role='banner']"]
+      }
+    },
+    {
+      "action": "expectVisible",
+      "selector": {
+        "description": "Homepage search input",
+        "css": "input[name='search'], input[placeholder*='Search'], input[type='search']",
+        "candidates": ["input[name='search']", "input[placeholder*='Search']", "input[type='search']"]
+      }
+    }
+  ]
+}

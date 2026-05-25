@@ -49,6 +49,26 @@ This guide defines the Singer Bangladesh Playwright TypeScript automation struct
 - Baselines live next to the visual spec under `*-snapshots/`.
 - Run `npm run test:visual` to compare and `npm run test:visual:update` only for intentional UI changes.
 
+## Accessibility Specs
+
+- `tests-ts/accessibility/homepage.a11y.spec.ts`
+- `tests-ts/accessibility/a11y.ts` provides `checkA11y(page)` using axe-core.
+- `tests-ts/accessibility/lighthouse.ts` runs a Lighthouse accessibility snapshot audit.
+- Run `npm run test:a11y` for the accessibility suite.
+
+## AI-Assisted Specs
+
+- `ai/definitions/*.json` stores structured generated-test definitions.
+- `ai/generate-test.ts` writes generated specs to `tests-ts/ai-generated/`.
+- `ai/repair-selectors.ts` ranks selector candidates from definitions and optional failure context.
+- Run `npm run ai:generate-tests` and `npm run test:ai-generated`.
+
+## Self-Healing Locators
+
+- `src/pages/basePage.ts` defines the self-healing locator strategy.
+- Page objects can provide primary selectors, fallbacks, text hints, and attribute hints.
+- Homepage header, search, and category navigation currently use the resilience layer.
+
 ## Test Case Catalog
 
 - `docs/test-cases.md` is generated from Playwright tests and contains the written test case list plus execution flow.

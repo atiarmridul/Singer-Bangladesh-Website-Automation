@@ -1,7 +1,40 @@
 import { expect, Locator, Page } from "@playwright/test";
 
 import { extractCategorySlug } from "../utils/url";
-import { BasePage } from "./basePage";
+import { BasePage, SelfHealingLocatorDefinition } from "./basePage";
+
+const headerLocator: SelfHealingLocatorDefinition = {
+  name: "Homepage header",
+  primary: "section.shadow-main-menu, .desktop-header-menu",
+  fallbacks: ["header", "[role='banner']", "nav:has-text('Categories')"],
+  textHints: ["categories", "brands", "campaigns", "search"],
+  attributeHints: {
+    role: ["banner", "navigation"]
+  }
+};
+
+const searchInputLocator: SelfHealingLocatorDefinition = {
+  name: "Homepage search input",
+  primary: "input[name='search'], input[placeholder*='Search'], input[type='search']",
+  fallbacks: ["input[placeholder*='Search']", "input[name='search']", "[role='searchbox']"],
+  textHints: ["search", "search here"],
+  attributeHints: {
+    placeholder: ["search"],
+    name: ["search"],
+    type: ["search"]
+  }
+};
+
+const categoryLinksLocator: SelfHealingLocatorDefinition = {
+  name: "Homepage category navigation",
+  primary: "a[href*='/category/']",
+  fallbacks: ["section:has-text('What are you looking for?') a", "a[aria-label*='category' i]"],
+  textHints: ["refrigerator", "television", "washing machine", "category"],
+  attributeHints: {
+    href: ["/category/"],
+    "aria-label": ["category"]
+  }
+};
 
 // Page object for homepage header, search, and footer entry points.
 export class HomePage extends BasePage {
@@ -15,13 +48,13 @@ export class HomePage extends BasePage {
   constructor(page: Page, baseUrl?: string) {
     super(page, baseUrl);
     // Selectors include fallback variants because the site has responsive/header variants.
-    this.header = this.byCss("section.shadow-main-menu, .desktop-header-menu");
-    this.searchInput = this.byCss("input[name='search'], input[placeholder*='Search'], input[type='search']");
+    this.header = this.selfHealingPrimary(headerLocator);
+    this.searchInput = this.selfHealingPrimary(searchInputLocator);
     this.searchButton = this.byCss("input[name='search'] ~ button").first();
     // Prefer visible footer variants because the desktop viewport still renders a hidden mobile fixed footer.
     this.footer = this.byCss("footer:visible, [class*='footer']:visible");
     this.productCards = this.byCss(".product-card, a[href*='/product/']");
-    this.categoryLinks = this.byCss("a[href*='/category/']");
+    this.categoryLinks = this.selfHealingPrimary(categoryLinksLocator);
   }
 
   async open(): Promise<void> {
@@ -34,8 +67,8 @@ export class HomePage extends BasePage {
 
   async assertLoaded(): Promise<void> {
     await expect(this.page).toHaveTitle(/Singer/i);
-    await this.expectVisible(this.header);
-    await this.expectVisible(this.searchInput);
+    await this.expectSelfHealingVisible(headerLocator, 10_000);
+    await this.expectSelfHealingVisible(searchInputLocator, 10_000);
   }
 
   async assertHasProducts(minimum: number): Promise<void> {
@@ -45,10 +78,11 @@ export class HomePage extends BasePage {
   async getVisibleCategorySlugs(limit: number): Promise<string[]> {
     const slugs: string[] = [];
     const seen = new Set<string>();
-    const count = await this.categoryLinks.count();
+    const categoryLinks = this.byCss(await this.resolveSelfHealingSelector(categoryLinksLocator, 10_000));
+    const count = await categoryLinks.count();
 
     for (let index = 0; index < count && slugs.length < limit; index += 1) {
-      const link = this.categoryLinks.nth(index);
+      const link = categoryLinks.nth(index);
       if (!(await link.isVisible().catch(() => false))) continue;
 
       const slug = extractCategorySlug(await link.getAttribute("href"));
@@ -62,8 +96,8 @@ export class HomePage extends BasePage {
   }
 
   async searchFor(keyword: string): Promise<void> {
-    await this.expectVisible(this.searchInput, "Search input should be visible before searching");
-    const input = this.searchInput.first();
+    await this.expectSelfHealingVisible(searchInputLocator, 10_000);
+    const input = await this.resolveSelfHealingLocator(searchInputLocator, 10_000);
     const normalizedKeyword = keyword.trim().toLowerCase().replace(/\s+/g, "-");
 
     // Some deployments render the search input readonly; force input events when needed.

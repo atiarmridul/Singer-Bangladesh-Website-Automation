@@ -1,10 +1,7 @@
 {
   "status": "in-progress",
   "currentTask": "Continue from existing handoff and keep progress tracker updated",
-  "nextSteps": [
-    "Review this new tracking guide",
-    "Use `agent_progress.json` for future handoff updates"
-  ],
+  "nextSteps": ["Review this new tracking guide", "Use `agent_progress.json` for future handoff updates"],
   "completedTasks": [
     "Created docs/AGENT_PROGRESS.md",
     "Created initial agent_progress.json",
@@ -21,7 +18,18 @@
     "Split oversized root README into concise landing page plus focused docs",
     "Updated category sanity tests to use live API-backed category fixture",
     "Fixed tag sanity scripts to run Chromium only and verified smoke pass",
-    "Fixed regression UI specs to use shared Singer fixture and tightened homepage category selector"
+    "Fixed regression UI specs to use shared Singer fixture and tightened homepage category selector",
+    "Added AI-assisted development workflow documentation to README",
+    "Added axe-core and Lighthouse accessibility testing workflow",
+    "Verified accessibility workflow with passing a11y suite and quality gate",
+    "Added inline comments for recent accessibility and lint configuration changes",
+    "Synced Markdown documentation and test-case generator for accessibility suite",
+    "Added AI-assisted JSON-to-Playwright generation and selector repair workflow",
+    "Expanded README AI-assisted automation workflow branding section",
+    "Documented day-to-day AI workflow usage and fast feedback strategy",
+    "Added self-healing locator strategy with fallback and DOM-similarity recovery",
+    "Added homepage header visibility check to AI smoke definition",
+    "Converted canonical smoke coverage into an AI definition and regenerated the AI smoke spec"
   ],
   "blockers": [],
   "filesTouched": [
@@ -58,16 +66,13 @@
     "docs/mcp.md",
     "tests-ts/sanity/cases/category.ts"
   ],
-  "lastUpdated": "2026-05-25T04:00:50.303Z",
+  "lastUpdated": "2026-05-25T04:46:57.166Z",
   "owner": "codex",
   "history": [
     {
       "timestamp": "2026-05-24T00:00:00Z",
       "summary": "Created initial agent handoff tracking artifact",
-      "files": [
-        "docs/AGENT_PROGRESS.md",
-        "agent_progress.json"
-      ]
+      "files": ["docs/AGENT_PROGRESS.md", "agent_progress.json"]
     },
     {
       "timestamp": "2026-05-24T17:29:56.938Z",
@@ -77,68 +82,42 @@
     {
       "timestamp": "2026-05-24T17:31:38.887Z",
       "summary": "Documented automatic agent progress workflow",
-      "files": [
-        "agent.md"
-      ]
+      "files": ["agent.md"]
     },
     {
       "timestamp": "2026-05-24T17:32:30.779Z",
       "summary": "Added network response wait helper to BasePage",
-      "files": [
-        "src/pages/basePage.ts"
-      ]
+      "files": ["src/pages/basePage.ts"]
     },
     {
       "timestamp": "2026-05-24T17:40:01.066Z",
       "summary": "Added global setup environment smoke check",
-      "files": [
-        "playwright.config.ts",
-        "tests-ts/fixtures/globalSetup.ts"
-      ]
+      "files": ["playwright.config.ts", "tests-ts/fixtures/globalSetup.ts"]
     },
     {
       "timestamp": "2026-05-24T17:46:10.110Z",
       "summary": "Enabled Playwright parallel execution and marked cart tests serial",
-      "files": [
-        "playwright.config.ts",
-        "package.json",
-        "tests-ts/sanity/cases/cart.ts"
-      ]
+      "files": ["playwright.config.ts", "package.json", "tests-ts/sanity/cases/cart.ts"]
     },
     {
       "timestamp": "2026-05-24T17:50:50.337Z",
       "summary": "Added live catalog data factory for product/cart tests",
-      "files": [
-        "tests-ts/fixtures/dataFactory.ts",
-        "tests-ts/fixtures/singerTest.ts"
-      ]
+      "files": ["tests-ts/fixtures/dataFactory.ts", "tests-ts/fixtures/singerTest.ts"]
     },
     {
       "timestamp": "2026-05-24T17:55:57.437Z",
       "summary": "Added visual regression coverage for homepage header and hero",
-      "files": [
-        "tests-ts/visual/homepage.visual.spec.ts",
-        "package.json"
-      ]
+      "files": ["tests-ts/visual/homepage.visual.spec.ts", "package.json"]
     },
     {
       "timestamp": "2026-05-24T17:59:03.281Z",
       "summary": "Added CI workflows for push sanity and scheduled regression",
-      "files": [
-        ".github/workflows/sanity.yml",
-        ".github/workflows/regression.yml"
-      ]
+      "files": [".github/workflows/sanity.yml", ".github/workflows/regression.yml"]
     },
     {
       "timestamp": "2026-05-24T18:01:53.763Z",
       "summary": "Updated Markdown documentation for recent framework improvements",
-      "files": [
-        "README.md",
-        "agent.md",
-        "docs/architecture.md",
-        "docs/environments.md",
-        "docs/walkthrough.md"
-      ]
+      "files": ["README.md", "agent.md", "docs/architecture.md", "docs/environments.md", "docs/walkthrough.md"]
     },
     {
       "timestamp": "2026-05-24T18:03:49.253Z",

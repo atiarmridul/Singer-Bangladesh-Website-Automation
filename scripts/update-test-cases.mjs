@@ -29,6 +29,16 @@ const TEST_SECTIONS = [
     title: "Visual Regression Tests",
     prefix: "VISUAL",
     files: listFiles("tests-ts/visual")
+  },
+  {
+    title: "Accessibility Tests",
+    prefix: "A11Y",
+    files: listFiles("tests-ts/accessibility").filter((file) => file.endsWith(".spec.ts"))
+  },
+  {
+    title: "AI Generated Tests",
+    prefix: "AI",
+    files: listFiles("tests-ts/ai-generated")
   }
 ];
 
@@ -66,6 +76,8 @@ const METHOD_STEPS = new Map([
   ["homePage.expectVisible", "Verify the homepage element is visible."],
   ["homePage.open", "Open the homepage."],
   ["homePage.searchFor", "Search from the homepage using configured keyword."],
+  ["checkA11y", "Run the axe-core accessibility scan against the hydrated page."],
+  ["expectLighthouseAccessibilityScore", "Run the Lighthouse accessibility audit and verify the score threshold."],
   ["openFirstProductFromCategory", "Open the first product from the configured category listing."],
   ["loginPage.expectTextContains", "Verify the login modal contains the expected welcome copy."],
   ["loginPage.expectVisible", "Verify the login modal or login entry point is visible."],
@@ -389,7 +401,7 @@ function tagsFor(title) {
 }
 
 function explicitIdFor(title) {
-  return title.match(/\bSANITY_\d+\b/)?.[0] ?? "";
+  return title.match(/\b[A-Z]+(?:_[A-Z]+)*_\d+\b/)?.[0] ?? "";
 }
 
 function buildDocument(sections) {
@@ -462,6 +474,14 @@ function inferPurpose(title) {
     return "protects a critical storefront component against unintended layout or rendering changes.";
   }
 
+  if (title.includes("@a11y")) {
+    return "validates accessibility coverage for a critical storefront page.";
+  }
+
+  if (title.includes("@ai")) {
+    return "validates a generated Playwright test produced from structured AI-assisted test definitions.";
+  }
+
   if (title.includes("@api")) {
     return "validates that UI-facing data remains aligned with the backend API contract.";
   }
@@ -472,6 +492,14 @@ function inferPurpose(title) {
 function inferRisk(title) {
   if (title.includes("@visual")) {
     return "unexpected visual drift, broken layout, or missing critical UI components.";
+  }
+
+  if (title.includes("@a11y")) {
+    return "critical accessibility defects, missing accessible metadata, or broad audit score regressions.";
+  }
+
+  if (title.includes("@ai")) {
+    return "AI-generated test drift, invalid selectors, or generated specs that bypass framework conventions.";
   }
 
   if (title.includes("@api")) {

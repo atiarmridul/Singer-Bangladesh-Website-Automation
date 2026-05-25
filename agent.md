@@ -25,6 +25,8 @@ Primary test areas:
 - Sanity UI coverage under `tests-ts/sanity/`
 - API-assisted regression coverage under `tests-ts/regression/`
 - Visual regression coverage under `tests-ts/visual/`
+- Accessibility coverage under `tests-ts/accessibility/`
+- AI-generated coverage under `tests-ts/ai-generated/`
 
 ## Core Commands
 
@@ -34,6 +36,9 @@ npm run test:sanity
 npm run test:regression
 npm run test:visual
 npm run test:visual:update
+npm run test:a11y
+npm run ai:generate-tests
+npm run test:ai-generated
 npm run docs:test-cases
 ```
 
@@ -44,6 +49,7 @@ Run `docs:test-cases` after adding, removing, renaming, or materially changing t
 
 - Page objects live in `src/pages/`.
 - API client, models, and agents live in `src/api/`.
+- AI-assisted generation scripts live in `ai/`.
 - Shared Playwright fixtures live in `tests-ts/fixtures/`.
 - `tests-ts/fixtures/globalSetup.ts` validates the selected environment and checks `BASE_URL` reachability before tests run.
 - `tests-ts/fixtures/dataFactory.ts` uses `CatalogApiAgent` to provide live API-backed test data.

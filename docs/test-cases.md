@@ -17,6 +17,8 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
 | Sanity Tests            | 22         |
 | Regression Tests        | 18         |
 | Visual Regression Tests | 2          |
+| Accessibility Tests     | 2          |
+| AI Generated Tests      | 1          |
 
 ## Sanity Tests
 
@@ -495,3 +497,39 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
 - Execution:
   1. Prepare the homepage for visual comparison at the baseline viewport.
   2. Compare the target area against the committed screenshot baseline.
+
+## Accessibility Tests
+
+### A11Y_001 - Homepage - should not have critical axe violations
+
+- Source: `tests-ts/accessibility/homepage.a11y.spec.ts`
+- Tags: `@a11y`
+- Purpose: scans the hydrated homepage for critical WCAG accessibility violations.
+- Risk covered: missing accessible names, invalid ARIA, contrast regressions, or keyboard-blocking markup.
+- Execution:
+  1. Open the target page in the browser.
+  2. Wait for the page to settle before assertions.
+  3. Run the axe-core accessibility scan against the hydrated page.
+
+### A11Y_002 - Homepage - should meet Lighthouse accessibility threshold
+
+- Source: `tests-ts/accessibility/homepage.a11y.spec.ts`
+- Tags: `@a11y`
+- Purpose: records a Lighthouse accessibility audit as a high-level accessibility quality gate.
+- Risk covered: broad accessibility regressions missed by targeted functional assertions.
+- Execution:
+  1. Run the Lighthouse accessibility audit and verify the score threshold.
+
+## AI Generated Tests
+
+### AI_SANITY_001 - Homepage - should load header and search controls
+
+- Source: `tests-ts/ai-generated/ai-sanity-001.generated.spec.ts`
+- Tags: `@ai`, `@smoke`, `@homepage`
+- Purpose: mirrors the hand-written smoke test that verifies the homepage shell can load enough for a user to start browsing or searching.
+- Risk covered: blank page, missing header, broken search entry point, or generated test drift from the canonical smoke flow.
+- Execution:
+  1. Open the target page in the browser.
+  2. Verify the page title matches the expected Singer title pattern.
+  3. Verify the target UI element is visible.
+  4. Verify the final assertion for this test case.

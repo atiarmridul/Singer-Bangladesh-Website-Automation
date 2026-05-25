@@ -25,14 +25,12 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - status: in-progress
 - owner: codex
 - currentTask: Continue from existing handoff and keep progress tracker updated
-- lastUpdated: 2026-05-25T04:00:50.303Z
-
+- lastUpdated: 2026-05-25T04:46:57.166Z
 
 ## Next Steps
 
 - Review this new tracking guide
 - Use `agent_progress.json` for future handoff updates
-
 
 ## Completed Tasks
 
@@ -52,7 +50,17 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - Updated category sanity tests to use live API-backed category fixture
 - Fixed tag sanity scripts to run Chromium only and verified smoke pass
 - Fixed regression UI specs to use shared Singer fixture and tightened homepage category selector
-
+- Added AI-assisted development workflow documentation to README
+- Added axe-core and Lighthouse accessibility testing workflow
+- Verified accessibility workflow with passing a11y suite and quality gate
+- Added inline comments for recent accessibility and lint configuration changes
+- Synced Markdown documentation and test-case generator for accessibility suite
+- Added AI-assisted JSON-to-Playwright generation and selector repair workflow
+- Expanded README AI-assisted automation workflow branding section
+- Documented day-to-day AI workflow usage and fast feedback strategy
+- Added self-healing locator strategy with fallback and DOM-similarity recovery
+- Added homepage header visibility check to AI smoke definition
+- Converted canonical smoke coverage into an AI definition and regenerated the AI smoke spec
 
 ## Files Touched
 
@@ -88,7 +96,6 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - docs/ci.md
 - docs/mcp.md
 - tests-ts/sanity/cases/category.ts
-
 
 ## History
 
