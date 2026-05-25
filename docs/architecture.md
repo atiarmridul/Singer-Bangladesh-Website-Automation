@@ -2,6 +2,9 @@
 
 This project is organized as a Playwright TypeScript automation framework with clear separation between specs, reusable test cases, page objects, fixtures, configuration, and optional API helpers.
 
+For the standards behind these architecture choices, including page-object interaction rules, live data caching,
+performance guardrails, generated test hygiene, and failure triage, see [standards.md](standards.md).
+
 ## POM Flow
 
 Page Object Model keeps locators and reusable browser actions out of test assertions.

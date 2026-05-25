@@ -2,6 +2,8 @@
 
 This document describes the repository layout and ownership boundaries.
 
+For cross-cutting engineering rules that apply across these folders, see [standards.md](standards.md).
+
 ## Tree
 
 ```text
@@ -74,3 +76,4 @@ npx playwright test tests-ts/sanity/sanity.spec.ts --project=chromium --grep @sm
 - If search behavior changes, update `HomePage.searchFor()` and `SearchPage`.
 - If environment selection fails, check `src/config.ts` and `environments/*.env`.
 - If API response shape changes, update `src/api/models.ts` and `src/api/agents/catalogAgent.ts`.
+- If a change affects framework conventions, update [standards.md](standards.md).

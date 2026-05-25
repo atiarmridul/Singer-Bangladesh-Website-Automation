@@ -94,12 +94,15 @@ API agents provide optional typed access to Singer BD backend endpoints.
 
 - `README.md` is the concise GitHub landing page.
 - `docs/commands.md` contains commands, tags, and debugging notes.
+- `docs/standards.md` contains engineering standards, performance guardrails, and failure triage guidance.
 - `docs/project-structure.md` contains repository layout, layer responsibilities, and maintenance notes.
 - `docs/reports.md` contains report and artifact guidance.
 - `docs/ci.md` contains workflow and CI execution guidance.
 - `docs/mcp.md` contains local MCP server usage.
 
 ## Architecture Rules
+
+Use `docs/standards.md` for the full operating standard. The short rules below summarize the default architecture boundaries:
 
 1. Keep reusable locators and page actions in `src/pages/`.
 2. Keep reusable test bodies in `tests-ts/sanity/cases/`.

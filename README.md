@@ -15,11 +15,45 @@ MCP server for project metadata/tooling.
 
 ## Quick Start
 
+Prerequisites:
+
+- Node.js 18+ and npm
+- Git
+
+Clone and enter the project:
+
+```bash
+git clone <repository-url>
+cd Singer_BD_Automation
+```
+
+Install dependencies and Playwright browsers:
+
 ```bash
 npm ci
 npx playwright install
+```
+
+Set up local environment defaults:
+
+```bash
+cp .env.example .env
+```
+
+The default `.env.example` targets `https://www.singerbd.com/`. Override values in `.env` or with shell variables when
+running against another environment.
+
+Validate the project and run the first smoke test:
+
+```bash
 npm run quality
 npm run test:tag:smoke
+```
+
+Run the full sanity suite:
+
+```bash
+npm run test:sanity
 ```
 
 ## At A Glance
@@ -58,6 +92,7 @@ See [docs/commands.md](docs/commands.md) for the full command reference.
 | ---------------------------- | ------------------------------------------------------------ |
 | Commands, tags, debugging    | [docs/commands.md](docs/commands.md)                         |
 | Test case list and execution | [docs/test-cases.md](docs/test-cases.md)                     |
+| Engineering standards        | [docs/standards.md](docs/standards.md)                       |
 | Architecture diagrams        | [docs/architecture.md](docs/architecture.md)                 |
 | Project structure and layers | [docs/project-structure.md](docs/project-structure.md)       |
 | Environment switching        | [docs/environments.md](docs/environments.md)                 |

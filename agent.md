@@ -78,6 +78,7 @@ Keep these docs aligned when changing framework behavior:
 - `docs/commands.md`
 - `docs/ci.md`
 - `docs/environments.md`
+- `docs/standards.md`
 - `docs/mcp.md`
 - `docs/project-structure.md`
 - `docs/reports.md`
@@ -86,4 +87,5 @@ Keep these docs aligned when changing framework behavior:
 - `docs/test-cases.md`
 
 Keep `README.md` concise and wire detailed guidance into focused files under `docs/`.
+Use `docs/standards.md` as the source for engineering standards, performance guardrails, generated test hygiene, and failure triage expectations.
 Avoid running `npm run docs:update` unless you intend to regenerate `README.md` and `docs/agent.md`; the generator is intentionally broad and may overwrite hand-written README sections.

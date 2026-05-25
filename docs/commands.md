@@ -88,6 +88,9 @@ npm run docs:test-cases
 Run this after adding, removing, renaming, or materially changing tests. The generated output is
 [docs/test-cases.md](test-cases.md).
 
+Use [standards.md](standards.md) when changing framework conventions, generated-test behavior, fixture data strategy,
+or failure triage guidance.
+
 Avoid `npm run docs:update` unless you intend to regenerate `README.md` and `docs/agent.md`; that generator is broad and
 can overwrite hand-written sections.
 
