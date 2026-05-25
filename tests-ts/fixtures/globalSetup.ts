@@ -1,12 +1,18 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import { FullConfig } from "@playwright/test";
 
 import { getSettings } from "../../src/config";
 import { ConfigurationError } from "../../src/exceptions";
 
 const reachableStatuses = new Set([200, 301, 302, 304, 401, 403]);
+const allureResultsDir = path.resolve(process.cwd(), "allure-results");
 
 // Checks the target website is reachable before browser tests spend time running.
 async function globalSetup(_config: FullConfig): Promise<void> {
+  fs.rmSync(allureResultsDir, { recursive: true, force: true });
+
   const settings = getSettings(process.env.TEST_ENV);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), settings.timeoutMs);

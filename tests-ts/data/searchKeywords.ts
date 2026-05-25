@@ -6,6 +6,7 @@ type SearchKeywordData = {
 
 const data = keywordData as SearchKeywordData;
 
+// Validate test data at import time so search tests fail with a clear fixture error.
 if (!Array.isArray(data.keywords) || data.keywords.length === 0) {
   throw new Error("tests-ts/data/search-keywords.json must provide at least one keyword");
 }
