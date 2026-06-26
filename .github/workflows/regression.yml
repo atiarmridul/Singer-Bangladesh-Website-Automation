@@ -1,9 +1,6 @@
 name: Scheduled Regression
 
 on:
-  schedule:
-    # Runs every day at 02:00 UTC.
-    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       target_env:
