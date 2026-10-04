@@ -15,7 +15,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
 | Suite                   | Test cases |
 | ----------------------- | ---------- |
 | Sanity Tests            | 22         |
-| Regression Tests        | 18         |
+| Regression Tests        | 21         |
 | Visual Regression Tests | 2          |
 | Accessibility Tests     | 2          |
 | AI Generated Tests      | 35         |
@@ -312,7 +312,34 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   4. Verify the browser URL matches the expected route pattern.
   5. Verify the target UI element is visible.
 
-### REG_005 - Homepage - should show core content blocks
+### REG_005 - Catalog - should expose unique valid product links
+
+- Source: `tests-ts/regression/catalog.spec.ts`
+- Tags: None
+- Purpose: verifies every sampled listing card points to one distinct, well-formed PDP route.
+- Risk covered: duplicated cards, empty hrefs, malformed routes, or links pointing outside the product area.
+- Execution:
+  1. Open the configured category listing with the configured pagination.
+  2. Verify the category listing shell is loaded.
+  3. Get Visible Product Hrefs. on category..
+  4. Verify the measured value is greater than the expected minimum.
+  5. Verify the boolean check returns true.
+  6. Verify the final assertion for this test case.
+
+### REG_006 - Catalog - should preserve listing state after reload
+
+- Source: `tests-ts/regression/catalog.spec.ts`
+- Tags: None
+- Purpose: confirms a listing remains usable after a browser reload without losing its requested page state.
+- Risk covered: hydration failures after reload, dropped category parameters, or disappearing product results.
+- Execution:
+  1. Open the configured category listing with the configured pagination.
+  2. Verify the category listing shell is loaded.
+  3. Verify the final assertion for this test case.
+  4. Reload. on page..
+  5. Verify the browser URL matches the expected route pattern.
+
+### REG_007 - Homepage - should show core content blocks
 
 - Source: `tests-ts/regression/homepage.spec.ts`
 - Tags: None
@@ -323,7 +350,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   2. Verify the homepage title, header, and search controls are loaded.
   3. Verify the homepage renders the expected minimum number of product cards.
 
-### REG_006 - Homepage - should match visible category tiles with API categories
+### REG_008 - Homepage - should match visible category tiles with API categories
 
 - Source: `tests-ts/regression/homepage.spec.ts`
 - Tags: `@api`
@@ -335,7 +362,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   3. Verify the measured count meets or exceeds the expected minimum.
   4. Verify no unexpected values were found.
 
-### REG_007 - Product - should load details page successfully
+### REG_009 - Product - should load details page successfully
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -345,7 +372,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   1. Open the first product from the configured category listing.
   2. Verify the extracted value is not empty.
 
-### REG_008 - Product - should match details with API response
+### REG_010 - Product - should match details with API response
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: `@api`
@@ -361,7 +388,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   7. Verify the extracted value is not empty.
   8. Verify the current URL or value contains the expected slug.
 
-### REG_009 - Product - should load image gallery
+### REG_011 - Product - should load image gallery
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -372,7 +399,20 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   2. Count product gallery images.
   3. Verify the measured value is greater than the expected minimum.
 
-### REG_010 - Product - should display stock status indicator
+### REG_012 - Product - should load visible gallery images without errors
+
+- Source: `tests-ts/regression/productDetails.spec.ts`
+- Tags: None
+- Purpose: verifies the visible PDP gallery contains images the browser successfully downloaded and decoded.
+- Risk covered: broken CDN URLs, zero-byte responses, or image elements that render with no usable pixels.
+- Execution:
+  1. Open the first product from the configured category listing.
+  2. Evaluate All. on product images..
+  3. Get Broken Visible Product Image Sources. on product page..
+  4. Verify the measured value is greater than the expected minimum.
+  5. Verify no unexpected values were found.
+
+### REG_013 - Product - should display stock status indicator
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -384,7 +424,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   3. Check whether the product appears to be in stock.
   4. Verify the extracted value is not empty.
 
-### REG_011 - Product - should show add to cart button
+### REG_014 - Product - should show add to cart button
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -394,7 +434,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   1. Open the first product from the configured category listing.
   2. Verify the boolean check returns true.
 
-### REG_012 - Product - should allow checking reviews section visibility
+### REG_015 - Product - should allow checking reviews section visibility
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -404,7 +444,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   1. Open the first product from the configured category listing.
   2. Check whether the reviews section is present.
 
-### REG_013 - Product - should allow reading product description
+### REG_016 - Product - should allow reading product description
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -414,7 +454,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   1. Open the first product from the configured category listing.
   2. Read the product description from the details page.
 
-### REG_014 - Product - should allow reading brand information
+### REG_017 - Product - should allow reading brand information
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -424,7 +464,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   1. Open the first product from the configured category listing.
   2. Read product brand information from the details page.
 
-### REG_015 - Product - should display price
+### REG_018 - Product - should display price
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -435,7 +475,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   2. Read the visible product price.
   3. Verify the extracted value is not empty.
 
-### REG_016 - Product - should open directly by API slug
+### REG_019 - Product - should open directly by API slug
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: `@api`
@@ -447,7 +487,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   3. Verify the product details page shell is loaded.
   4. Verify the extracted value is not empty.
 
-### REG_017 - Product - should use matching product URL slug
+### REG_020 - Product - should use matching product URL slug
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None
@@ -463,7 +503,7 @@ The generator expands data-driven search tests from `tests-ts/data/search-keywor
   7. Verify the current URL or value contains the expected slug.
   8. Verify the final assertion for this test case.
 
-### REG_018 - Product - should display a non-empty title
+### REG_021 - Product - should display a non-empty title
 
 - Source: `tests-ts/regression/productDetails.spec.ts`
 - Tags: None

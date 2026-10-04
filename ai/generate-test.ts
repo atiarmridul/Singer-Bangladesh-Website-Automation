@@ -77,8 +77,11 @@ function renderStep(step: TestStep): string[] {
 // Chooses imports needed by the generated test file.
 function importsFor(testCase: GeneratedTestCase): string {
   const usesA11y = testCase.steps.some((step) => step.action === "checkA11y");
+  const usesClick = testCase.steps.some((step) => step.action === "click");
+  const usesFill = testCase.steps.some((step) => step.action === "fill");
+  const playwrightTypes = [...(usesClick || usesFill ? ["Locator"] : []), ...(usesClick ? ["Page"] : [])];
   const imports = [
-    'import type { Locator, Page } from "@playwright/test";',
+    ...(playwrightTypes.length ? [`import type { ${playwrightTypes.join(", ")} } from "@playwright/test";`] : []),
     'import { expect, test } from "../fixtures/singerTest";'
   ];
 
@@ -89,9 +92,14 @@ function importsFor(testCase: GeneratedTestCase): string {
   return imports.join("\n");
 }
 
-// Writes helper code into every generated spec so generated tests can handle popups and tricky inputs.
-function helperFunctions(): string {
-  return `// Closes popups that can cover buttons during generated tests.
+// Writes only the helpers required by a definition's actions.
+function helperFunctions(testCase: GeneratedTestCase): string {
+  const usesClick = testCase.steps.some((step) => step.action === "click");
+  const usesFill = testCase.steps.some((step) => step.action === "fill");
+  const helpers: string[] = [];
+
+  if (usesClick) {
+    helpers.push(`// Closes popups that can cover buttons during generated tests.
 async function dismissBlockingModals(page: Page): Promise<void> {
   const modal = page.locator(".modal-wrapper:visible").last();
 
@@ -109,24 +117,9 @@ async function dismissBlockingModals(page: Page): Promise<void> {
 
   await page.keyboard.press("Escape").catch(() => undefined);
   await expect(modal).toBeHidden({ timeout: 3_000 }).catch(() => undefined);
-}
+}`);
 
-// Fills normal inputs, and also helps readonly inputs by sending browser events.
-async function robustFill(locator: Locator, value: string): Promise<void> {
-  const target = locator.first();
-
-  await target.fill(value, { timeout: 5_000 }).catch(async () => {
-    await target.evaluate((element, inputValue) => {
-      element.removeAttribute("readonly");
-      const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
-      valueSetter?.call(element, inputValue);
-      element.dispatchEvent(new Event("input", { bubbles: true }));
-      element.dispatchEvent(new Event("change", { bubbles: true }));
-    }, value);
-  });
-}
-
-// Opens links by href, and clicks normal buttons.
+    helpers.push(`// Opens links by href, and clicks normal buttons.
 async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
   const target = locator.first();
   const href = await target.getAttribute("href").catch(() => null);
@@ -139,8 +132,27 @@ async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
   await target.click({ timeout: 10_000 }).catch(async () => {
     await target.click({ force: true });
   });
-}
-`;
+}`);
+  }
+
+  if (usesFill) {
+    helpers.push(`// Fills normal inputs, and also helps readonly inputs by sending browser events.
+async function robustFill(locator: Locator, value: string): Promise<void> {
+  const target = locator.first();
+
+  await target.fill(value, { timeout: 5_000 }).catch(async () => {
+    await target.evaluate((element, inputValue) => {
+      element.removeAttribute("readonly");
+      const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+      valueSetter?.call(element, inputValue);
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+      element.dispatchEvent(new Event("change", { bubbles: true }));
+    }, value);
+  });
+}`);
+  }
+
+  return helpers.join("\n\n");
 }
 
 // Turns one parsed test definition into a complete Playwright spec file.
@@ -152,7 +164,7 @@ function renderTest(testCase: GeneratedTestCase): string {
 
   return `${importsFor(testCase)}
 
-${helperFunctions()}
+${helperFunctions(testCase)}
 
 test.describe("AI generated tests", () => {
   // Purpose: ${testCase.purpose}

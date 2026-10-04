@@ -25,21 +25,6 @@ async function dismissBlockingModals(page: Page): Promise<void> {
     .catch(() => undefined);
 }
 
-// Fills normal inputs, and also helps readonly inputs by sending browser events.
-async function robustFill(locator: Locator, value: string): Promise<void> {
-  const target = locator.first();
-
-  await target.fill(value, { timeout: 5_000 }).catch(async () => {
-    await target.evaluate((element, inputValue) => {
-      element.removeAttribute("readonly");
-      const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
-      valueSetter?.call(element, inputValue);
-      element.dispatchEvent(new Event("input", { bubbles: true }));
-      element.dispatchEvent(new Event("change", { bubbles: true }));
-    }, value);
-  });
-}
-
 // Opens links by href, and clicks normal buttons.
 async function clickOrNavigate(page: Page, locator: Locator): Promise<void> {
   const target = locator.first();

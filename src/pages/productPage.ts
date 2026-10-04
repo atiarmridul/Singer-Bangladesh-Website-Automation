@@ -82,6 +82,29 @@ export class ProductPage extends BasePage {
     return await this.productImages.count();
   }
 
+  // Returns visible product image URLs that the browser could not decode into usable images.
+  async getBrokenVisibleProductImageSources(): Promise<string[]> {
+    const brokenSources: string[] = [];
+    const count = await this.productImages.count();
+
+    for (let index = 0; index < count; index += 1) {
+      const image = this.productImages.nth(index);
+      if (!(await image.isVisible().catch(() => false))) continue;
+
+      const health = await image.evaluate((element) => {
+        const htmlImage = element as HTMLImageElement;
+        return {
+          loaded: htmlImage.complete && htmlImage.naturalWidth > 0,
+          source: htmlImage.currentSrc || htmlImage.src
+        };
+      });
+
+      if (!health.loaded) brokenSources.push(health.source || "[missing src]");
+    }
+
+    return brokenSources;
+  }
+
   // Reads the stock status text from the product page.
   async getStockStatus(): Promise<string> {
     return (

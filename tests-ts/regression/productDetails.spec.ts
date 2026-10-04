@@ -64,6 +64,24 @@ test.describe("Product details regression", () => {
     expect(imagesCount).toBeGreaterThan(0);
   });
 
+  // Purpose: verifies the visible PDP gallery contains images the browser successfully downloaded and decoded.
+  // Risk covered: broken CDN URLs, zero-byte responses, or image elements that render with no usable pixels.
+  test("Product - should load visible gallery images without errors", async ({ page }, testInfo) => {
+    const productPage = await openFirstProductFromCategory(page);
+    const visibleImageCount = await productPage.productImages.evaluateAll(
+      (images) => images.filter((image) => (image as HTMLElement).offsetParent !== null).length
+    );
+    const brokenSources = await productPage.getBrokenVisibleProductImageSources();
+
+    await testInfo.attach("broken_product_image_sources", {
+      body: brokenSources.join("\n") || "None",
+      contentType: "text/plain"
+    });
+
+    expect(visibleImageCount).toBeGreaterThan(0);
+    expect(brokenSources).toEqual([]);
+  });
+
   // Purpose: checks that PDP availability information is exposed to shoppers.
   // Risk covered: missing stock badge/text or changed stock indicator markup.
   test("Product - should display stock status indicator", async ({ page }, testInfo) => {

@@ -53,6 +53,22 @@ export class CategoryPage extends BasePage {
     return slugs;
   }
 
+  // Collects visible product hrefs so regression tests can validate listing navigation contracts.
+  async getVisibleProductHrefs(limit: number): Promise<string[]> {
+    const hrefs: string[] = [];
+    const count = await this.productLinks.count();
+
+    for (let index = 0; index < count && hrefs.length < limit; index += 1) {
+      const link = this.productLinks.nth(index);
+      if (!(await link.isVisible().catch(() => false))) continue;
+
+      const href = await link.getAttribute("href");
+      if (href) hrefs.push(href);
+    }
+
+    return hrefs;
+  }
+
   // Opens a stable category page used by simple navigation checks.
   async openCategories(): Promise<void> {
     await this.goto("/category/small-appliances");

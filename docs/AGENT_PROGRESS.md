@@ -22,15 +22,16 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 
 ## Current Status
 
-- status: in-progress
+- status: pending
 - owner: codex
-- currentTask: Continue from existing handoff and keep progress tracker updated
-- lastUpdated: 2026-05-25T04:46:57.166Z
+- currentTask: Re-run the three new catalog/PDP regression tests from an environment allowed by Singer's CDN
+- lastUpdated: 2026-10-04T14:21:00.760Z
 
 ## Next Steps
 
 - Review this new tracking guide
 - Use `agent_progress.json` for future handoff updates
+- Re-run the three new Chromium regression tests from an IP/environment allowed by Singer's CDN
 
 ## Completed Tasks
 
@@ -61,6 +62,12 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - Added self-healing locator strategy with fallback and DOM-similarity recovery
 - Added homepage header visibility check to AI smoke definition
 - Converted canonical smoke coverage into an AI definition and regenerated the AI smoke spec
+- Added and executed three catalog/PDP regression tests for product-link integrity, listing reload persistence, and visible image health; refreshed test catalog; recorded CDN Access Denied execution blocker.
+- Made AI test generation capability-aware, regenerated all 35 AI specs, added four generator regression tests, and restored the repository-wide quality gate
+
+## Blockers
+
+- Singer's Akamai edge returns Access Denied for category pages from the current execution environment, preventing live validation of the three new browser tests
 
 ## Files Touched
 
@@ -96,6 +103,9 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
 - docs/ci.md
 - docs/mcp.md
 - tests-ts/sanity/cases/category.ts
+- ai/generate-test.ts
+- ai/generate-test.test.mjs
+- tests-ts/ai-generated
 
 ## History
 
@@ -135,3 +145,13 @@ npm run agent:progress -- --completed "Updated feature X" --sync-doc
   - tests-ts/visual/homepage.visual.spec.ts
   - src/api/models.ts
   - src/pages/basePage.ts
+- 2026-10-03T16:42:11.958Z: Started agent session
+- 2026-10-04T14:12:21.708Z: Verified staged catalog/PDP regression additions; recorded CDN and generated-spec lint blockers
+  - src/pages/categoryPage.ts
+  - src/pages/productPage.ts
+  - tests-ts/regression/catalog.spec.ts
+  - tests-ts/regression/productDetails.spec.ts
+- 2026-10-04T14:20:05.360Z: Restored generated-spec lint quality gate; live catalog/PDP retry remains blocked by Singer CDN Access Denied
+  - ai/generate-test.ts
+  - ai/generate-test.test.mjs
+  - tests-ts/ai-generated

@@ -41,4 +41,39 @@ test.describe("Catalog regression", () => {
     await expect(page).toHaveURL(/\/product\//);
     await expect(page.locator("h1:visible").first()).toBeVisible({ timeout: 15_000 });
   });
+
+  // Purpose: verifies every sampled listing card points to one distinct, well-formed PDP route.
+  // Risk covered: duplicated cards, empty hrefs, malformed routes, or links pointing outside the product area.
+  test("Catalog - should expose unique valid product links", async ({ page }, testInfo) => {
+    const category = new CategoryPage(page, settings.baseUrl);
+    await category.load(settings.defaultCategory, 1, settings.productsLimit);
+    await category.assertLoaded();
+
+    const hrefs = await category.getVisibleProductHrefs(settings.productsLimit);
+    const uniqueHrefs = new Set(hrefs);
+
+    await testInfo.attach("visible_product_hrefs", { body: hrefs.join("\n"), contentType: "text/plain" });
+
+    expect(hrefs.length).toBeGreaterThan(0);
+    expect(hrefs.every((href) => /^\/product\/[^/?#]+(?:[?#].*)?$/.test(href))).toBe(true);
+    expect(uniqueHrefs.size).toBe(hrefs.length);
+  });
+
+  // Purpose: confirms a listing remains usable after a browser reload without losing its requested page state.
+  // Risk covered: hydration failures after reload, dropped category parameters, or disappearing product results.
+  test("Catalog - should preserve listing state after reload", async ({ page }) => {
+    const category = new CategoryPage(page, settings.baseUrl);
+    await category.load(settings.defaultCategory, 1, settings.productsLimit);
+    await category.assertLoaded();
+    expect((await category.getVisibleProductHrefs(1)).length).toBe(1);
+
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await category.assertLoaded();
+
+    await expect(page).toHaveURL(new RegExp(`/category/${settings.defaultCategory}`));
+    expect(new URL(page.url()).searchParams.get("category")).toBe(settings.defaultCategory);
+    expect(new URL(page.url()).searchParams.get("page")).toBe("1");
+    expect(new URL(page.url()).searchParams.get("limit")).toBe(String(settings.productsLimit));
+    expect((await category.getVisibleProductHrefs(1)).length).toBe(1);
+  });
 });
